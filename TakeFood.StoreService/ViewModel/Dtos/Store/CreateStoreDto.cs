@@ -69,5 +69,9 @@ namespace TakeFood.StoreService.ViewModel.Dtos.Store
         [JsonPropertyName("TaxID")]
         [NotNull]
         public string TaxID { get; set; }
+
+        [JsonPropertyName("Categories")]
+        [NotNull]
+        public List<StoreCategoryDto> Categories { get; set; }
     }
 }

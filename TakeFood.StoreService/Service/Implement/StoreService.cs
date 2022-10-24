@@ -13,11 +13,14 @@ namespace StoreService.Service.Implement
         private readonly IMongoRepository<Store> storeRepository;
         private readonly IMongoRepository<Address> addressRepository;
         private readonly IImageService imageService;
-        public StoreService(IMongoRepository<Store> storeRepository, IMongoRepository<Address> addressRepository, IImageService imageService)
+        private readonly IMongoRepository<StoreCategory> storeCateRepository;
+        public StoreService(IMongoRepository<Store> storeRepository, IMongoRepository<Address> addressRepository
+            , IImageService imageService, IMongoRepository<StoreCategory> storeCateRepository)
         {
             this.storeRepository = storeRepository;
             this.addressRepository = addressRepository;
             this.imageService = imageService;
+            this.storeCateRepository = storeCateRepository;
         }
 
         public async Task CreateStore(string ownerID, CreateStoreDto store)
@@ -37,6 +40,17 @@ namespace StoreService.Service.Implement
                 NumReiview = 0,
                 TaxId = store.TaxID,
             };
+
+            foreach (var category in store.Categories)
+            {
+                StoreCategory storeCategory = new StoreCategory()
+                {
+                    CategoryId = category.CategoryId,
+                    StoreId = _store.Id
+                };
+                await storeCateRepository.InsertAsync(storeCategory);
+            }
+
             await storeRepository.InsertAsync(_store);
             await InsertImage(_store.Id, "6354d739d64447e2509cb9fb", store.urlStoreImage);
             await InsertImage(_store.Id, "6354d7e9d64447e2509cb9fc", store.urlKitchenImage);

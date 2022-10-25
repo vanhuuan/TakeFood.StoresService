@@ -12,4 +12,7 @@ public class Category:ModelMongoDB
     /// </summary>
     [BsonElement("Name")]
     public string Name;
+
+    [BsonElement("Type")]
+    public string Type;
 }

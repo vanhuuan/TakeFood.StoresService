@@ -2,6 +2,7 @@
 using StoreService.Service;
 using TakeFood.StoreService.Controllers;
 using StoreService.Model.Entities.Food;
+using TakeFood.StoreService.ViewModel.Dtos.Food;
 
 namespace StoreService.Controllers
 {
@@ -16,10 +17,10 @@ namespace StoreService.Controllers
             _FoodService = foodService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> createFood(Food food)
+        [HttpPost("{StoreID}")]
+        public async Task<IActionResult> createFood(string StoreID, CreateFoodDto food)
         {
-            await _FoodService.CreateFood(food);
+            await _FoodService.CreateFood(StoreID, food);
 
             return Ok(food);
         }

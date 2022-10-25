@@ -21,6 +21,7 @@ using StoreService.Model.Entities.Address;
 using TakeFood.StoreService.Service;
 using TakeFood.StoreService.Service.Implement;
 using StoreService.Model.Entities.Image;
+using StoreService.Model.Entities.Topping;
 
 namespace StoreService;
 
@@ -120,6 +121,8 @@ public class Startup
         services.AddMongoRepository<Address>(appSetting.NoSQL.Collections.Address);
         services.AddMongoRepository<Image>(appSetting.NoSQL.Collections.Image);
         services.AddMongoRepository<StoreCategory>(appSetting.NoSQL.Collections.StoreCategory);
+        services.AddMongoRepository<Topping>(appSetting.NoSQL.Collections.Topping);
+        services.AddMongoRepository<FoodTopping>(appSetting.NoSQL.Collections.FoodTopping);
 
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IMailService, MailService>();
@@ -128,6 +131,7 @@ public class Startup
         services.AddScoped<IFoodService, FoodService>();
         services.AddScoped<IAddressService, AddressService>();
         services.AddScoped<IImageService, ImageService>();
+        services.AddScoped<IToppingService, ToppingService>();
 
         services.AddScoped<IJwtService, JwtService>(x => new JwtService(x.GetRequiredService<IMongoRepository<UserRefreshToken>>()
            , appSetting.JwtConfig.Secret, appSetting.JwtConfig.Secret2, appSetting.JwtConfig.ExpirationInHours, appSetting.JwtConfig.ExpirationInMonths));

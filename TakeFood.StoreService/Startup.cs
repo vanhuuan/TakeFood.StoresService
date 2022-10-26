@@ -21,6 +21,8 @@ using StoreService.Model.Entities.Address;
 using TakeFood.StoreService.Service;
 using TakeFood.StoreService.Service.Implement;
 using StoreService.Model.Entities.Image;
+using StoreService.Model.Entities.Topping;
+using Microsoft.OpenApi.Models;
 
 namespace StoreService;
 
@@ -97,7 +99,33 @@ public class Startup
         });
 
         services.AddControllers();
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(option =>
+        {
+            option.SwaggerDoc("v1", new OpenApiInfo { Title = "Store API", Version = "v1" });
+            option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "Please enter a valid token",
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                BearerFormat = "JWT",
+                Scheme = "Bearer"
+            });
+            option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
+        });
         services.AddEndpointsApiExplorer();
 
         string databaseName = appSetting.NoSQL.DatabaseName;
@@ -120,6 +148,8 @@ public class Startup
         services.AddMongoRepository<Address>(appSetting.NoSQL.Collections.Address);
         services.AddMongoRepository<Image>(appSetting.NoSQL.Collections.Image);
         services.AddMongoRepository<StoreCategory>(appSetting.NoSQL.Collections.StoreCategory);
+        services.AddMongoRepository<Topping>(appSetting.NoSQL.Collections.Topping);
+        services.AddMongoRepository<FoodTopping>(appSetting.NoSQL.Collections.FoodTopping);
 
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IMailService, MailService>();
@@ -128,6 +158,7 @@ public class Startup
         services.AddScoped<IFoodService, FoodService>();
         services.AddScoped<IAddressService, AddressService>();
         services.AddScoped<IImageService, ImageService>();
+        services.AddScoped<IToppingService, ToppingService>();
 
         services.AddScoped<IJwtService, JwtService>(x => new JwtService(x.GetRequiredService<IMongoRepository<UserRefreshToken>>()
            , appSetting.JwtConfig.Secret, appSetting.JwtConfig.Secret2, appSetting.JwtConfig.ExpirationInHours, appSetting.JwtConfig.ExpirationInMonths));

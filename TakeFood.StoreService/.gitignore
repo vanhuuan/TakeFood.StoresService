@@ -70,6 +70,8 @@ ScaffoldingReadMe.txt
 
 # StyleCop
 StyleCopReport.xml
+menu.json
+store.json
 
 # Files built by Visual Studio
 *_i.c

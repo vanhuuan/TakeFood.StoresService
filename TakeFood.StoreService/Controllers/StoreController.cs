@@ -18,7 +18,7 @@ namespace StoreService.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> createStore(string OwnerID, CreateStoreDto store)
+        public async Task<IActionResult> CreateStoreAsync(string OwnerID, CreateStoreDto store)
         {
             await _StoreService.CreateStore(OwnerID, store);
 
@@ -53,6 +53,24 @@ namespace StoreService.Controllers
             {
                 return BadRequest(err.Message);
             }
+        }
+
+        [HttpGet]
+        [Route("InsertStore")]
+        public async Task<IActionResult> InsertStoreAsync()
+        {
+            await _StoreService.InertCrawlData();
+
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("InsertMenu")]
+        public async Task<IActionResult> InsertMenuStoreAsync()
+        {
+            await _StoreService.InertMenuCrawlDataAsync();
+
+            return Ok();
         }
     }
 }

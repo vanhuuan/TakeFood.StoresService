@@ -8,5 +8,7 @@ namespace StoreService.Service
     {
         List<Store> getAllStores();
         Task CreateStore(string ownerID, CreateStoreDto store);
+        Task<List<CardStoreDto>> GetStoreNearByAsync(GetStoreNearByDto getStoreNearByDto);
+        Task<List<CardStoreDto>> FilterStoreNearByAsync(FilterStoreByCategoryId filterStoreByCategory);
     }
 }

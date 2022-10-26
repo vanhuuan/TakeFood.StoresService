@@ -1,11 +1,11 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using System.Linq.Expressions;
-using TakeFood.StoreService.Model.Content;
 using StoreService.Model.Entities;
 using StoreService.Utilities;
 using StoreService.Utilities.Helper;
+using System.Linq.Expressions;
+using TakeFood.StoreService.Model.Content;
 
 namespace StoreService.Model.Repository;
 
@@ -532,6 +532,7 @@ public partial class MongoRepository<T>
         {
             if (entity.Id == null)
             {
+                entity.CreatedDate = DateTime.UtcNow;
                 entity.Id = ObjectId.GenerateNewId().ToString();
             }
             entity.IsDeleted = false;
@@ -539,6 +540,7 @@ public partial class MongoRepository<T>
         }
         else
         {
+            entity.UpdatedDate = DateTime.UtcNow;
             await Collection.ReplaceOneAsync(item => item.Id == entity.Id, entity);
         }
         return entity;

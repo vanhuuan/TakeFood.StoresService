@@ -1,8 +1,9 @@
-﻿
+﻿using MongoDB.Driver.Linq;
 using StoreService.Model.Entities.Address;
 using StoreService.Model.Entities.Store;
 using StoreService.Model.Repository;
 using TakeFood.StoreService.Service;
+using TakeFood.StoreService.Utilities.Helper;
 using TakeFood.StoreService.ViewModel.Dtos.Image;
 using TakeFood.StoreService.ViewModel.Dtos.Store;
 
@@ -72,6 +73,116 @@ namespace StoreService.Service.Implement
                 Url = url,
             };
             await imageService.CreateImage(storeID, categoryID, image);
+        }
+
+        public async Task<List<CardStoreDto>> GetStoreNearByAsync(GetStoreNearByDto getStoreNearByDto)
+        {
+            var box = MapCoordinates.GetBoundingBox(new MapPoint()
+            {
+                Latitude = getStoreNearByDto.Lat,
+                Longitude = getStoreNearByDto.Lng
+            }, getStoreNearByDto.RadiusOut);
+            IList<Address> storeAddress;
+            IEnumerable<string> ids;
+            storeAddress = await addressRepository.FindAsync(x => x.AddressType == "Store" && box.MinPoint.Latitude <= x.Lat && x.Lng <= box.MaxPoint.Latitude && box.MinPoint.Longitude <= x.Lng && x.Lng <= box.MinPoint.Latitude);
+            if (getStoreNearByDto.RadiusIn != 0)
+            {
+                var inBox = MapCoordinates.GetBoundingBox(new MapPoint()
+                {
+                    Latitude = getStoreNearByDto.Lat,
+                    Longitude = getStoreNearByDto.Lng
+                }, getStoreNearByDto.RadiusIn);
+
+                storeAddress = storeAddress.Where(x => !(inBox.MinPoint.Latitude <= x.Lat && x.Lng <= inBox.MaxPoint.Latitude && inBox.MinPoint.Longitude <= x.Lng && x.Lng <= inBox.MinPoint.Latitude)).ToList();
+            }
+            ids = storeAddress.Select(y => y.Id);
+            storeAddress = null;
+            var stores = await storeRepository.FindAsync(x => ids.Contains(x.Id));
+            ids = null;
+
+            var rs = new List<CardStoreDto>();
+            foreach (var store in stores)
+            {
+                var address = await addressRepository.FindByIdAsync(store.AddressId);
+                rs.Add(new CardStoreDto()
+                {
+                    StoreName = store.Name,
+                    Star = store.SumStar / store.NumReiview,
+                    StoreId = store.Id,
+                    Address = address.Addrress,
+                    Distance = new Coordinates(48.672309, 15.695585)
+                                .DistanceTo(
+                                    new Coordinates(48.237867, 16.389477),
+                                    UnitOfLength.Kilometers
+                                ),
+                    NumOfReView = store.NumReiview
+                });
+            }
+
+            return rs.OrderBy(x => x.Distance).ToList();
+        }
+
+        private async Task<List<CardStoreDto>> GetStoreNearByAsync(GetStoreNearByDto getStoreNearByDto, IList<Address> addresses)
+        {
+            var box = MapCoordinates.GetBoundingBox(new MapPoint()
+            {
+                Latitude = getStoreNearByDto.Lat,
+                Longitude = getStoreNearByDto.Lng
+            }, getStoreNearByDto.RadiusOut);
+            IList<Address> storeAddress;
+            IEnumerable<string> ids;
+            storeAddress = addresses.Where(x => box.MinPoint.Latitude <= x.Lat && x.Lng <= box.MaxPoint.Latitude && box.MinPoint.Longitude <= x.Lng && x.Lng <= box.MinPoint.Latitude).ToList();
+            if (getStoreNearByDto.RadiusIn != 0)
+            {
+                var inBox = MapCoordinates.GetBoundingBox(new MapPoint()
+                {
+                    Latitude = getStoreNearByDto.Lat,
+                    Longitude = getStoreNearByDto.Lng
+                }, getStoreNearByDto.RadiusIn);
+
+                storeAddress = storeAddress.Where(x => !(inBox.MinPoint.Latitude <= x.Lat && x.Lng <= inBox.MaxPoint.Latitude && inBox.MinPoint.Longitude <= x.Lng && x.Lng <= inBox.MinPoint.Latitude)).ToList();
+            }
+            ids = storeAddress.Select(y => y.Id);
+            storeAddress = null;
+            var stores = await storeRepository.FindAsync(x => ids.Contains(x.Id));
+            ids = null;
+
+            var rs = new List<CardStoreDto>();
+            foreach (var store in stores)
+            {
+                var address = await addressRepository.FindByIdAsync(store.AddressId);
+                rs.Add(new CardStoreDto()
+                {
+                    StoreName = store.Name,
+                    Star = store.SumStar / store.NumReiview,
+                    StoreId = store.Id,
+                    Address = address.Addrress,
+                    Distance = new Coordinates(48.672309, 15.695585)
+                                .DistanceTo(
+                                    new Coordinates(48.237867, 16.389477),
+                                    UnitOfLength.Kilometers
+                                ),
+                    NumOfReView = store.NumReiview
+                });
+            }
+
+            return rs.OrderBy(x => x.Distance).ToList();
+        }
+
+        public async Task<List<CardStoreDto>> FilterStoreNearByAsync(FilterStoreByCategoryId filterStoreByCategory)
+        {
+            var stores = await storeCateRepository.FindAsync(x => filterStoreByCategory.Equals(x.CategoryId));
+            var storesId = stores.Select(x => x.StoreId);
+            stores = null;
+            var addresseId = await storeRepository.FindAsync(x => storesId.Contains(x.Id));
+            storesId = null;
+            return await GetStoreNearByAsync(new GetStoreNearByDto()
+            {
+                Lat = filterStoreByCategory.Lat,
+                Lng = filterStoreByCategory.Lng,
+                RadiusIn = filterStoreByCategory.RadiusIn,
+                RadiusOut = filterStoreByCategory.RadiusOut
+            }, await addressRepository.FindAsync(x => addresseId.Select(x => x.AddressId).Contains(x.Id)));
         }
     }
 }

@@ -532,6 +532,7 @@ public partial class MongoRepository<T>
         {
             if (entity.Id == null)
             {
+                entity.CreatedDate = DateTime.UtcNow;
                 entity.Id = ObjectId.GenerateNewId().ToString();
             }
             entity.IsDeleted = false;
@@ -539,6 +540,7 @@ public partial class MongoRepository<T>
         }
         else
         {
+            entity.UpdatedDate = DateTime.UtcNow;
             await Collection.ReplaceOneAsync(item => item.Id == entity.Id, entity);
         }
         return entity;
@@ -558,6 +560,7 @@ public partial class MongoRepository<T>
         {
             if (entity.Id == null)
             {
+                entity.CreatedDate = DateTime.UtcNow;
                 entity.Id = ObjectId.GenerateNewId().ToString();
             }
             entity.IsDeleted = false;
@@ -565,6 +568,7 @@ public partial class MongoRepository<T>
         }
         else
         {
+            entity.UpdatedDate = DateTime.UtcNow;
             await Collection.ReplaceOneAsync(session, item => item.Id == entity.Id, entity);
         }
         return entity;
@@ -592,6 +596,7 @@ public partial class MongoRepository<T>
     {
         if (entity != null && entity.Id != null)
         {
+            entity.UpdatedDate = DateTime.UtcNow;
             await Collection.ReplaceOneAsync(session, item => item.Id == entity.Id, entity);
             return entity;
         }

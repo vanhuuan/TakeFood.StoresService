@@ -29,7 +29,7 @@ namespace StoreService.Service.Implement
                 State = food.State
             };
             
-           Food temp = await _foodRepository.InsertAsync(f);
+            Food temp = await _foodRepository.InsertAsync(f);
 
             foreach (var i in food.ListTopping)
             {

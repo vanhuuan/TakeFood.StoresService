@@ -1,10 +1,15 @@
 ﻿
+using Microsoft.VisualBasic;
 using StoreService.Model.Entities.Address;
+using StoreService.Model.Entities.Food;
 using StoreService.Model.Entities.Store;
 using StoreService.Model.Repository;
+using System.Text.Json;
 using TakeFood.StoreService.Service;
+using TakeFood.StoreService.ViewModel.Dtos.Food;
 using TakeFood.StoreService.ViewModel.Dtos.Image;
 using TakeFood.StoreService.ViewModel.Dtos.Store;
+using TakeFood.StoreService.ViewModel.Dtos.Topping;
 
 namespace StoreService.Service.Implement
 {
@@ -13,14 +18,16 @@ namespace StoreService.Service.Implement
         private readonly IMongoRepository<Store> storeRepository;
         private readonly IMongoRepository<Address> addressRepository;
         private readonly IImageService imageService;
+        private readonly IFoodService foodService;
         private readonly IMongoRepository<StoreCategory> storeCateRepository;
         public StoreService(IMongoRepository<Store> storeRepository, IMongoRepository<Address> addressRepository
-            , IImageService imageService, IMongoRepository<StoreCategory> storeCateRepository)
+            , IImageService imageService, IMongoRepository<StoreCategory> storeCateRepository, IFoodService foodService)
         {
             this.storeRepository = storeRepository;
             this.addressRepository = addressRepository;
             this.imageService = imageService;
             this.storeCateRepository = storeCateRepository;
+            this.foodService = foodService;
         }
 
         public async Task CreateStore(string ownerID, CreateStoreDto store)
@@ -65,6 +72,78 @@ namespace StoreService.Service.Implement
             return storeRepository.GetAll().ToList();
         }
 
+        public async Task InertCrawlData()
+        {
+            List<Root> items;
+            using (StreamReader r = new StreamReader("store.json"))
+            {
+                string json = r.ReadToEnd();
+                items = JsonSerializer.Deserialize<List<Root>>(json)!;
+            }
+            foreach(var i in items)
+            {
+                var address = new Address()
+                {
+                    Information = "From foody",
+                    Addrress = i.address,
+                    AddressType = "Store",
+                    Lat = i.lat,
+                    Lng = i.lng
+                };
+
+                await addressRepository.InsertAsync(address);
+                var store = new Store()
+                {
+                    Name = i.name,
+                    PhoneNumber = i.phoneNumber,
+                    State = "Active",
+                    SumStar = 0,
+                    NumReiview = 0,
+                    OwnerId = i.id.ToString(),
+                    TaxId = "0102859048",
+                    AddressId = address.Id,
+                    
+                };
+                await storeRepository.InsertAsync(store);
+                foreach(var img in i.img)
+                {
+                    await imageService.CreateImage(store.Id, "Store", new ImageDto()
+                    {
+                        Url = img.value,
+                    });
+                }
+
+            }
+            return;
+        }
+        public async Task InertMenuCrawlDataAsync()
+        {
+            List<Root2> items;
+            using (StreamReader r = new StreamReader("menu.json"))
+            {
+                string json = r.ReadToEnd();
+                items = JsonSerializer.Deserialize<List<Root2>>(json)!;
+
+                foreach (var i in items)
+                {
+                    var store = await storeRepository.FindOneAsync(x => x.OwnerId == i.id.ToString());
+
+                    await foodService.CreateFood(store.Id, new CreateFoodDto()
+                    {
+                        Name = i.name,
+                        Descript = i.description,
+                        urlImage = i.photo,
+                        State = true,
+                        Price = i.price,
+                        CategoriesID = new List<string>(),
+                        ListTopping = new List<ToppingCreateFoodDto>()
+                    }); ;
+
+                }
+                return;
+            }
+        }
+
         private async Task InsertImage(string storeID, string categoryID, string url)
         {
             ImageDto image = new ImageDto()
@@ -72,6 +151,35 @@ namespace StoreService.Service.Implement
                 Url = url,
             };
             await imageService.CreateImage(storeID, categoryID, image);
+        }
+
+        private class Img
+        {
+            public int width { get; set; }
+            public string value { get; set; }
+            public int height { get; set; }
+        }
+
+        private class Root
+        {
+            public int id { get; set; }
+            public string name { get; set; }
+            public string phoneNumber { get; set; }
+            public string address { get; set; }
+            public double lat { get; set; }
+            public double lng { get; set; }
+            public List<Img> img { get; set; }
+            public List<string> category { get; set; }
+        }
+
+        private class Root2
+        {
+            public double id { get; set; }
+            public string type { get; set; }
+            public string name { get; set; }
+            public string description { get; set; }
+            public double price { get; set; }
+            public string photo { get; set; }
         }
     }
 }

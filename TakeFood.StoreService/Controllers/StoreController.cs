@@ -1,16 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using StoreService.Middleware;
 using StoreService.Service;
-using StoreService.Utilities.Extension;
 using System.ComponentModel.DataAnnotations;
 using TakeFood.StoreService.Controllers;
 using TakeFood.StoreService.Model.Entities;
 using TakeFood.StoreService.ViewModel.Dtos.Store;
 
+
 namespace StoreService.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
     public class StoreController : BaseController
     {
         private IStoreService _StoreService;
@@ -31,12 +30,12 @@ namespace StoreService.Controllers
         [HttpPost]
         [Authorize]
         [Route("GetNearBy")]
-        public async Task<IActionResult> GetStoreNearByAsync(GetStoreNearByDto dto)
+        public async Task<IActionResult> GetStoreNearByAsync([FromBody] GetStoreNearByDto dto)
         {
             try
             {
                 var list = await _StoreService.GetStoreNearByAsync(dto);
-                return Ok(list.Clone());
+                return Ok(list.ToJson());
             }
             catch (Exception err)
             {
@@ -47,12 +46,12 @@ namespace StoreService.Controllers
         [HttpPost]
         [Authorize]
         [Route("FilterNearByWithCategory")]
-        public async Task<ActionResult<List<CardStoreDto>>> FilterStoreNearByAsync(FilterStoreByCategoryId dto)
+        public async Task<IActionResult> FilterStoreNearByAsync([FromBody] FilterStoreByCategoryId dto)
         {
             try
             {
                 var list = await _StoreService.FilterStoreNearByAsync(dto);
-                return list;
+                return Ok(list.ToJson()); ;
             }
             catch (Exception err)
             {
@@ -69,7 +68,7 @@ namespace StoreService.Controllers
             {
                 var list = await _StoreService.FindStoreByNameAsync(name, lat, lng, start);
 
-                return Ok(list);
+                return Ok(list.ToJson());
             }
             catch (Exception err)
             {

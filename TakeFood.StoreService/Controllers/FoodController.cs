@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StoreService.Service;
 using TakeFood.StoreService.Controllers;
-using StoreService.Model.Entities.Food;
 using TakeFood.StoreService.ViewModel.Dtos.Food;
 
 namespace StoreService.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class FoodController:BaseController
+    public class FoodController : BaseController
     {
         private IFoodService _FoodService;
 

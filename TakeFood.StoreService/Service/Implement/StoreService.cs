@@ -160,7 +160,7 @@ namespace StoreService.Service.Implement
             }, getStoreNearByDto.RadiusOut);
             IList<Address> storeAddress;
             IEnumerable<string> ids;
-            storeAddress = await addressRepository.FindAsync(x => x.AddressType == "Store" && box.MinPoint.Latitude <= x.Lat && x.Lng <= box.MaxPoint.Latitude && box.MinPoint.Longitude <= x.Lng && x.Lng <= box.MinPoint.Latitude);
+            storeAddress = await addressRepository.FindAsync(x => x.AddressType == "Store" && box.MinPoint.Latitude <= x.Lat && x.Lat <= box.MaxPoint.Latitude && box.MinPoint.Longitude <= x.Lng && x.Lng <= box.MaxPoint.Longitude);
             if (getStoreNearByDto.RadiusIn != 0)
             {
                 var inBox = MapCoordinates.GetBoundingBox(new MapPoint()
@@ -169,11 +169,11 @@ namespace StoreService.Service.Implement
                     Longitude = getStoreNearByDto.Lng
                 }, getStoreNearByDto.RadiusIn);
 
-                storeAddress = storeAddress.Where(x => !(inBox.MinPoint.Latitude <= x.Lat && x.Lng <= inBox.MaxPoint.Latitude && inBox.MinPoint.Longitude <= x.Lng && x.Lng <= inBox.MinPoint.Latitude)).ToList();
+                storeAddress = storeAddress.Where(x => !(inBox.MinPoint.Latitude <= x.Lat && x.Lat <= inBox.MaxPoint.Latitude && inBox.MinPoint.Longitude <= x.Lng && x.Lng <= inBox.MaxPoint.Longitude)).ToList();
             }
             ids = storeAddress.Select(y => y.Id);
             storeAddress = null;
-            var stores = await storeRepository.FindAsync(x => ids.Contains(x.Id));
+            var stores = await storeRepository.FindAsync(x => ids.Contains(x.AddressId));
             ids = null;
 
             var rs = new List<CardStoreDto>();
@@ -183,12 +183,12 @@ namespace StoreService.Service.Implement
                 rs.Add(new CardStoreDto()
                 {
                     StoreName = store.Name,
-                    Star = store.SumStar / store.NumReiview,
+                    Star = store.SumStar / (store.NumReiview == 0 ? 1 : store.NumReiview),
                     StoreId = store.Id,
                     Address = address.Addrress,
-                    Distance = new Coordinates(48.672309, 15.695585)
+                    Distance = new Coordinates(getStoreNearByDto.Lat, getStoreNearByDto.Lng)
                                 .DistanceTo(
-                                    new Coordinates(48.237867, 16.389477),
+                                    new Coordinates(address.Lat, address.Lng),
                                     UnitOfLength.Kilometers
                                 ),
                     NumOfReView = store.NumReiview
@@ -207,7 +207,7 @@ namespace StoreService.Service.Implement
             }, getStoreNearByDto.RadiusOut);
             IList<Address> storeAddress;
             IEnumerable<string> ids;
-            storeAddress = addresses.Where(x => box.MinPoint.Latitude <= x.Lat && x.Lng <= box.MaxPoint.Latitude && box.MinPoint.Longitude <= x.Lng && x.Lng <= box.MinPoint.Latitude).ToList();
+            storeAddress = addresses.Where(x => box.MinPoint.Latitude <= x.Lat && x.Lat <= box.MaxPoint.Latitude && box.MinPoint.Longitude <= x.Lng && x.Lng <= box.MaxPoint.Longitude).ToList();
             if (getStoreNearByDto.RadiusIn != 0)
             {
                 var inBox = MapCoordinates.GetBoundingBox(new MapPoint()
@@ -216,7 +216,7 @@ namespace StoreService.Service.Implement
                     Longitude = getStoreNearByDto.Lng
                 }, getStoreNearByDto.RadiusIn);
 
-                storeAddress = storeAddress.Where(x => !(inBox.MinPoint.Latitude <= x.Lat && x.Lng <= inBox.MaxPoint.Latitude && inBox.MinPoint.Longitude <= x.Lng && x.Lng <= inBox.MinPoint.Latitude)).ToList();
+                storeAddress = storeAddress.Where(x => !(inBox.MinPoint.Latitude <= x.Lat && x.Lat <= inBox.MaxPoint.Latitude && inBox.MinPoint.Longitude <= x.Lng && x.Lng <= inBox.MaxPoint.Longitude)).ToList();
             }
             ids = storeAddress.Select(y => y.Id);
             storeAddress = null;

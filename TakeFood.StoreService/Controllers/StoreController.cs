@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StoreService.Middleware;
 using StoreService.Service;
+using StoreService.Utilities.Extension;
 using System.ComponentModel.DataAnnotations;
 using TakeFood.StoreService.Controllers;
 using TakeFood.StoreService.Model.Entities;
@@ -30,11 +31,12 @@ namespace StoreService.Controllers
         [HttpPost]
         [Authorize]
         [Route("GetNearBy")]
-        public async Task<ActionResult<IList<CardStoreDto>>> GetStoreNearByAsync(GetStoreNearByDto dto)
+        public async Task<IActionResult> GetStoreNearByAsync(GetStoreNearByDto dto)
         {
             try
             {
-                return await _StoreService.GetStoreNearByAsync(dto);
+                var list = await _StoreService.GetStoreNearByAsync(dto);
+                return Ok(list.Clone());
             }
             catch (Exception err)
             {
@@ -45,11 +47,12 @@ namespace StoreService.Controllers
         [HttpPost]
         [Authorize]
         [Route("FilterNearByWithCategory")]
-        public async Task<ActionResult<IList<CardStoreDto>>> FilterStoreNearByAsync(FilterStoreByCategoryId dto)
+        public async Task<ActionResult<List<CardStoreDto>>> FilterStoreNearByAsync(FilterStoreByCategoryId dto)
         {
             try
             {
-                return await _StoreService.FilterStoreNearByAsync(dto);
+                var list = await _StoreService.FilterStoreNearByAsync(dto);
+                return list;
             }
             catch (Exception err)
             {

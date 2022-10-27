@@ -8,6 +8,8 @@ namespace StoreService.Service
     {
         List<Store> getAllStores();
         Task CreateStore(string ownerID, CreateStoreDto store);
+        Task<List<CardStoreDto>> GetStoreNearByAsync(GetStoreNearByDto getStoreNearByDto);
+        Task<List<CardStoreDto>> FilterStoreNearByAsync(FilterStoreByCategoryId filterStoreByCategory);
         /// <summary>
         /// Insert crawl data from foody
         /// </summary>
@@ -18,5 +20,7 @@ namespace StoreService.Service
         /// </summary>
         /// <returns></returns>
         Task InertMenuCrawlDataAsync();
+
+        Task<List<CardStoreDto>> FindStoreByNameAsync(string keyword, double lat, double lng);
     }
 }

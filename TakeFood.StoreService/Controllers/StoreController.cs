@@ -20,6 +20,7 @@ namespace StoreService.Controllers
         }
 
         [HttpPost]
+        [Route("CreateStore")]
         public async Task<IActionResult> CreateStoreAsync(string OwnerID, CreateStoreDto store)
         {
             await _StoreService.CreateStore(OwnerID, store);

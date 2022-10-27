@@ -271,9 +271,10 @@ namespace StoreService.Service.Implement
             {
                 Lat = lat,
                 Lng = lng,
-                RadiusIn = 0,
+                RadiusIn = 1 * (start - 1),
                 RadiusOut = 5 * start
-            }, await addressRepository.FindAsync(x => addresseId.Select(x => x.AddressId).Contains(x.Id)));
+            }, await addressRepository.GetAllAsync());
+            return list.FindAll(x => x.StoreName.ToLower().Normalize().Contains(keyword.ToLower().Normalize()));
         }
 
         private class Img

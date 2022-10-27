@@ -28,7 +28,7 @@ namespace StoreService.Service.Implement
                 Description = food.Descript,
                 State = food.State
             };
-            
+
             Food temp = await _foodRepository.InsertAsync(f);
 
             foreach (var i in food.ListTopping)
@@ -37,6 +37,37 @@ namespace StoreService.Service.Implement
                 {
                     ToppingId = i.ID,
                     FoodId = temp.Id
+                };
+                await _foodToppingRepository.InsertAsync(foodTopping);
+            }
+        }
+
+        public async Task DeleteFood(string FoodID)
+        {
+            Food food = await _foodRepository.FindOneAsync(x => x.Id == FoodID);
+
+            food.State = false;
+            await _foodRepository.UpdateAsync(food);
+        }
+
+        public async Task UpdateFood(string FoodID, CreateFoodDto foodUpdate)
+        {
+            Food food = await _foodRepository.FindOneAsync(x => x.Id == FoodID);
+            food.Name = foodUpdate.Name;
+            food.Price = foodUpdate.Price;
+            food.Description = foodUpdate.Descript;
+            food.ImgUrl = foodUpdate.urlImage;
+            food.CategoriesID = foodUpdate.CategoriesID;
+            await _foodRepository.UpdateAsync(food);
+
+            await _foodToppingRepository.RemoveManyAsync(x => x.FoodId == FoodID);
+
+            foreach (var i in foodUpdate.ListTopping)
+            {
+                FoodTopping foodTopping = new FoodTopping()
+                {
+                    ToppingId = i.ID,
+                    FoodId = FoodID
                 };
                 await _foodToppingRepository.InsertAsync(foodTopping);
             }

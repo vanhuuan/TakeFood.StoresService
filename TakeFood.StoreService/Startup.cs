@@ -1,28 +1,26 @@
-﻿using StoreService.Extension;
+﻿using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.OpenApi.Models;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+using StoreService.Extension;
 using StoreService.Middleware;
+using StoreService.Model.Entities.Address;
+using StoreService.Model.Entities.Category;
+using StoreService.Model.Entities.Food;
+using StoreService.Model.Entities.Image;
 using StoreService.Model.Entities.Role;
+using StoreService.Model.Entities.Store;
+using StoreService.Model.Entities.Topping;
 using StoreService.Model.Entities.User;
 using StoreService.Model.Repository;
 using StoreService.Service;
 using StoreService.Service.Implement;
 using StoreService.Settings;
-using Microsoft.AspNetCore.HttpOverrides;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
 using System.Diagnostics;
 using System.Text.Json;
-using StoreService.Model.Entities.Store;
-using StoreService.Model.Entities.Food;
-using StoreService.Model.Entities.Category;
-using StoreService.Service;
-using StoreService.Service.Implement;
-using StoreService.Model.Entities.Address;
 using TakeFood.StoreService.Service;
 using TakeFood.StoreService.Service.Implement;
-using StoreService.Model.Entities.Image;
-using StoreService.Model.Entities.Topping;
-using Microsoft.OpenApi.Models;
 
 namespace StoreService;
 
@@ -127,6 +125,8 @@ public class Startup
     });
         });
         services.AddEndpointsApiExplorer();
+        services.AddAuthorization();
+        services.AddAuthentication();
 
         string databaseName = appSetting.NoSQL.DatabaseName;
         string mongoConnectionString = $"{appSetting.NoSQL?.ConnectionString}{appSetting.NoSQL?.ConnectionSetting}";
@@ -197,7 +197,8 @@ public class Startup
             app.UseDefaultFiles();
 
             app.UseStaticFiles();
-
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseEndpoints(endpoints =>

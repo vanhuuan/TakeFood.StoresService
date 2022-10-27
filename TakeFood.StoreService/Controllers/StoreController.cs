@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using StoreService.Middleware;
 using StoreService.Service;
 using System.ComponentModel.DataAnnotations;
 using TakeFood.StoreService.Controllers;
+using TakeFood.StoreService.Model.Entities;
 using TakeFood.StoreService.ViewModel.Dtos.Store;
 
 namespace StoreService.Controllers
@@ -27,7 +28,7 @@ namespace StoreService.Controllers
         }
 
         [HttpPost]
-        [Authorize("User")]
+        [Authorize]
         [Route("GetNearBy")]
         public async Task<ActionResult<IList<CardStoreDto>>> GetStoreNearByAsync(GetStoreNearByDto dto)
         {
@@ -42,7 +43,7 @@ namespace StoreService.Controllers
         }
 
         [HttpPost]
-        [Authorize("User")]
+        [Authorize]
         [Route("FilterNearByWithCategory")]
         public async Task<ActionResult<IList<CardStoreDto>>> FilterStoreNearByAsync(FilterStoreByCategoryId dto)
         {
@@ -57,7 +58,7 @@ namespace StoreService.Controllers
         }
 
         [HttpGet]
-        [Authorize("User")]
+        [Authorize]
         [Route("FindStore")]
         public async Task<IActionResult> FindStoreAsync([Required] string name, [Required] double lat, [Required] double lng, [Required] int start)
         {
@@ -74,7 +75,7 @@ namespace StoreService.Controllers
         }
 
         [HttpGet]
-        [Authorize("Admin")]
+        [Authorize(roles: Roles.Admin)]
         [Route("InsertStore")]
         public async Task<IActionResult> InsertStoreAsync()
         {
@@ -84,7 +85,7 @@ namespace StoreService.Controllers
         }
 
         [HttpGet]
-        [Authorize("Admin")]
+        [Authorize(roles: Roles.Admin)]
         [Route("InsertMenu")]
         public async Task<IActionResult> InsertMenuStoreAsync()
         {

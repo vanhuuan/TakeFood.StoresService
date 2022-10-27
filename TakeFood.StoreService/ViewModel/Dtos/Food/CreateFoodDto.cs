@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using TakeFood.StoreService.ViewModel.Dtos.Topping;
 
 namespace TakeFood.StoreService.ViewModel.Dtos.Food
 {

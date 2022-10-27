@@ -17,7 +17,7 @@ namespace StoreService.Controllers
             _StoreService = StoreService;
         }
 
-        [HttpPost]
+        [HttpPost("{OwnerID}")]
         public async Task<IActionResult> createStore(string OwnerID, CreateStoreDto store)
         {
             await _StoreService.CreateStore(OwnerID, store);

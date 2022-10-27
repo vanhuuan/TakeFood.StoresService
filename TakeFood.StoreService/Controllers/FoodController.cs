@@ -24,5 +24,13 @@ namespace StoreService.Controllers
 
             return Ok(food);
         }
+
+        [HttpPut]
+        public async Task<IActionResult> updateFood(string FoodID, CreateFoodDto foodUpdate)
+        {
+            await _FoodService.UpdateFood(FoodID, foodUpdate);
+
+            return Ok();
+        }
     }
 }

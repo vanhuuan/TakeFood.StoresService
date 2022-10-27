@@ -261,6 +261,21 @@ namespace StoreService.Service.Implement
             }, await addressRepository.FindAsync(x => addresseId.Select(x => x.AddressId).Contains(x.Id)));
         }
 
+        public async Task<List<CardStoreDto>> FindStoreByNameAsync(string keyword, double lat, double lng, int start)
+        {
+            if (start <= 0)
+            {
+                return new List<CardStoreDto>();
+            }
+            var list = await GetStoreNearByAsync(new GetStoreNearByDto()
+            {
+                Lat = lat,
+                Lng = lng,
+                RadiusIn = 0,
+                RadiusOut = 5 * start
+            }, await addressRepository.FindAsync(x => addresseId.Select(x => x.AddressId).Contains(x.Id)));
+        }
+
         private class Img
         {
             public int width { get; set; }

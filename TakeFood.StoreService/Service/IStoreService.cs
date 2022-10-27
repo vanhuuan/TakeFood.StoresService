@@ -20,5 +20,7 @@ namespace StoreService.Service
         /// </summary>
         /// <returns></returns>
         Task InertMenuCrawlDataAsync();
+
+        Task<List<CardStoreDto>> FindStoreByNameAsync(string keyword, double lat, double lng);
     }
 }

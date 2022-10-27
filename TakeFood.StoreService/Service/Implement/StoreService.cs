@@ -220,7 +220,7 @@ namespace StoreService.Service.Implement
             }
             ids = storeAddress.Select(y => y.Id);
             storeAddress = null;
-            var stores = await storeRepository.FindAsync(x => ids.Contains(x.Id));
+            var stores = await storeRepository.FindAsync(x => ids.Contains(x.AddressId));
             ids = null;
 
             var rs = new List<CardStoreDto>();
@@ -230,7 +230,7 @@ namespace StoreService.Service.Implement
                 rs.Add(new CardStoreDto()
                 {
                     StoreName = store.Name,
-                    Star = store.SumStar / store.NumReiview,
+                    Star = store.SumStar / (store.NumReiview == 0 ? 1 : store.NumReiview),
                     StoreId = store.Id,
                     Address = address.Addrress,
                     Distance = new Coordinates(48.672309, 15.695585)
@@ -250,7 +250,7 @@ namespace StoreService.Service.Implement
             var stores = await storeCateRepository.FindAsync(x => filterStoreByCategory.Equals(x.CategoryId));
             var storesId = stores.Select(x => x.StoreId);
             stores = null;
-            var addresseId = await storeRepository.FindAsync(x => storesId.Contains(x.Id));
+            var addresseId = (await storeRepository.FindAsync(x => storesId.Contains(x.Id))).Select(x => x.AddressId).Distinct().ToList();
             storesId = null;
             return await GetStoreNearByAsync(new GetStoreNearByDto()
             {
@@ -258,7 +258,7 @@ namespace StoreService.Service.Implement
                 Lng = filterStoreByCategory.Lng,
                 RadiusIn = filterStoreByCategory.RadiusIn,
                 RadiusOut = filterStoreByCategory.RadiusOut
-            }, await addressRepository.FindAsync(x => addresseId.Select(x => x.AddressId).Contains(x.Id)));
+            }, await addressRepository.FindAsync(x => addresseId.Contains(x.Id)));
         }
 
         public async Task<List<CardStoreDto>> FindStoreByNameAsync(string keyword, double lat, double lng, int start)
@@ -272,7 +272,7 @@ namespace StoreService.Service.Implement
                 Lat = lat,
                 Lng = lng,
                 RadiusIn = 1 * (start - 1),
-                RadiusOut = 5 * start
+                RadiusOut = 2 * start
             }, await addressRepository.GetAllAsync());
             return list.FindAll(x => x.StoreName.ToLower().Normalize().Contains(keyword.ToLower().Normalize()));
         }

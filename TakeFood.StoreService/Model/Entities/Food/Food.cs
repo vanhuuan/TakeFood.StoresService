@@ -9,4 +9,5 @@ public class Food:ModelMongoDB
     public string ImgUrl { get; set; }
     public string Description { get; set; }
     public bool State { get; set; }
+
 }

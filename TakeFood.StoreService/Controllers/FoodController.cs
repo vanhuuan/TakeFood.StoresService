@@ -40,5 +40,17 @@ namespace StoreService.Controllers
 
             return Ok();
         }
+
+        [HttpGet("GetAllFoodByStore/{StoreID}")]
+        public async Task<List<FoodView>> getAllFoodByStore(string StoreID)
+        {
+            return await _FoodService.GetAllFoodsByStoreID(StoreID);
+        }
+
+        [HttpGet("GetAllFoodByCategory/{CategoryID}")]
+        public async Task<List<FoodView>> GetAllFoodByCategory(string CategoryID)
+        {
+            return await _FoodService.GetAllFoodsByCategory(CategoryID);
+        }
     }
 }

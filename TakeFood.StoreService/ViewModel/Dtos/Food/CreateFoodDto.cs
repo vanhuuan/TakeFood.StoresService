@@ -18,7 +18,7 @@ namespace TakeFood.StoreService.ViewModel.Dtos.Food
         public double Price { get; set; }
 
         [JsonPropertyName("CategoryID")]
-        public List<string> CategoriesID { get; set; }
+        public string CategoriesID { get; set; }
 
         [JsonPropertyName("ListTopping")]
         public List<ToppingCreateFoodDto> ListTopping { get; set; }

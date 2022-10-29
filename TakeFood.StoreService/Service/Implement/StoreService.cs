@@ -133,7 +133,7 @@ namespace StoreService.Service.Implement
                         urlImage = i.photo,
                         State = true,
                         Price = i.price,
-                        CategoriesID = new List<string>(),
+                        CategoriesID = "",
                         ListTopping = new List<ToppingCreateFoodDto>()
                     }); ;
 

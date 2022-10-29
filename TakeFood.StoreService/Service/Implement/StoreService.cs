@@ -191,7 +191,8 @@ namespace StoreService.Service.Implement
                                     new Coordinates(address.Lat, address.Lng),
                                     UnitOfLength.Kilometers
                                 ),
-                    NumOfReView = store.NumReiview
+                    NumOfReView = store.NumReiview,
+                    Image = await imageService.GetStoreSlug(storeId: store.Id)
                 });
             }
 
@@ -238,7 +239,8 @@ namespace StoreService.Service.Implement
                                     new Coordinates(48.237867, 16.389477),
                                     UnitOfLength.Kilometers
                                 ),
-                    NumOfReView = store.NumReiview
+                    NumOfReView = store.NumReiview,
+                    Image = await imageService.GetStoreSlug(storeId: store.Id)
                 });
             }
 

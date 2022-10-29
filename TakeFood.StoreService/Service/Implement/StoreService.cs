@@ -7,7 +7,6 @@ using TakeFood.StoreService.Utilities.Helper;
 using TakeFood.StoreService.ViewModel.Dtos.Food;
 using TakeFood.StoreService.ViewModel.Dtos.Image;
 using TakeFood.StoreService.ViewModel.Dtos.Store;
-using TakeFood.StoreService.ViewModel.Dtos.Topping;
 
 namespace StoreService.Service.Implement
 {
@@ -180,20 +179,21 @@ namespace StoreService.Service.Implement
             foreach (var store in stores)
             {
                 var address = await addressRepository.FindByIdAsync(store.AddressId);
+                double d = new Coordinates(getStoreNearByDto.Lat, getStoreNearByDto.Lng)
+                                .DistanceTo(
+                                    new Coordinates(address.Lat, address.Lng),
+                                    UnitOfLength.Kilometers
+                                );
                 rs.Add(new CardStoreDto()
                 {
                     StoreName = store.Name,
                     Star = store.SumStar / (store.NumReiview == 0 ? 1 : store.NumReiview),
                     StoreId = store.Id,
                     Address = address.Addrress,
-                    Distance = new Coordinates(getStoreNearByDto.Lat, getStoreNearByDto.Lng)
-                                .DistanceTo(
-                                    new Coordinates(address.Lat, address.Lng),
-                                    UnitOfLength.Kilometers
-                                ),
+                    Distance = (double.IsNaN(d) || double.IsInfinity(d) ? 0 : d),
                     NumOfReView = store.NumReiview,
                     Image = await imageService.GetStoreSlug(storeId: store.Id)
-                });
+                }); ;
             }
 
             return rs.OrderBy(x => x.Distance).ToList();

@@ -31,4 +31,6 @@ public interface IUserService
     /// </summary>
     /// <returns></returns>
     Task Active(string token);
+    Task UpdateRole(string userID);
+    Task<Boolean> HasStore(string userID);
 }

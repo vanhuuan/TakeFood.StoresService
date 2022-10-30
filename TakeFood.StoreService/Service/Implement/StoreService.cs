@@ -16,16 +16,18 @@ namespace StoreService.Service.Implement
         private readonly IMongoRepository<Store> storeRepository;
         private readonly IMongoRepository<Address> addressRepository;
         private readonly IImageService imageService;
-        private readonly IFoodService foodService;
+        /*private readonly IFoodService foodService;*/
         private readonly IMongoRepository<StoreCategory> storeCateRepository;
+        private readonly IUserService userService;
         public StoreService(IMongoRepository<Store> storeRepository, IMongoRepository<Address> addressRepository
-            , IImageService imageService, IMongoRepository<StoreCategory> storeCateRepository, IFoodService foodService)
+            , IImageService imageService, IMongoRepository<StoreCategory> storeCateRepository, IFoodService foodService, IUserService userService)
         {
             this.storeRepository = storeRepository;
             this.addressRepository = addressRepository;
             this.imageService = imageService;
             this.storeCateRepository = storeCateRepository;
-            this.foodService = foodService;
+            /*this.foodService = foodService;*/
+            this.userService = userService;
         }
 
         public async Task CreateStore(string ownerID, CreateStoreDto store)
@@ -57,12 +59,13 @@ namespace StoreService.Service.Implement
             }
 
             await storeRepository.InsertAsync(_store);
-            await InsertImage(_store.Id, "6354d739d64447e2509cb9fb", store.urlStoreImage);
-            await InsertImage(_store.Id, "6354d7e9d64447e2509cb9fc", store.urlKitchenImage);
-            await InsertImage(_store.Id, "6354d802d64447e2509cb9fd", store.urlMenuImage);
-            await InsertImage(_store.Id, "6354d80dd64447e2509cb9fe", store.urlFontCmndImage);
-            await InsertImage(_store.Id, "6354d818d64447e2509cb9ff", store.urlBackCmndImage);
-            await InsertImage(_store.Id, "6354d82cd64447e2509cba00", store.urlLicenseImage);
+            await imageService.CreateImage(_store.Id, "6354d739d64447e2509cb9fb", "Store", store.urlStoreImage);
+            await imageService.CreateImage(_store.Id, "6354d7e9d64447e2509cb9fc", "Store", store.urlStoreImage);
+            await imageService.CreateImage(_store.Id, "6354d802d64447e2509cb9fd", "Store", store.urlStoreImage);
+            await imageService.CreateImage(_store.Id, "6354d80dd64447e2509cb9fe", "Store", store.urlStoreImage);
+            await imageService.CreateImage(_store.Id, "6354d818d64447e2509cb9ff", "Store", store.urlStoreImage);
+            await imageService.CreateImage(_store.Id, "6354d82cd64447e2509cba00", "Store", store.urlStoreImage);
+            await userService.UpdateRole(ownerID);
         }
 
         public List<Store> getAllStores()
@@ -103,13 +106,13 @@ namespace StoreService.Service.Implement
 
                 };
                 await storeRepository.InsertAsync(store);
-                foreach (var img in i.img)
+                /*foreach (var img in i.img)
                 {
                     await imageService.CreateImage(store.Id, "Store", new ImageDto()
                     {
                         Url = img.value,
                     });
-                }
+                }*/
 
             }
             return;
@@ -126,7 +129,7 @@ namespace StoreService.Service.Implement
                 {
                     var store = await storeRepository.FindOneAsync(x => x.OwnerId == i.id.ToString());
 
-                    await foodService.CreateFood(store.Id, new CreateFoodDto()
+                    /*await foodService.CreateFood(store.Id, new CreateFoodDto()
                     {
                         Name = i.name,
                         Descript = i.description,
@@ -135,22 +138,12 @@ namespace StoreService.Service.Implement
                         Price = i.price,
                         CategoriesID = "",
                         ListTopping = new List<ToppingCreateFoodDto>()
-                    }); ;
+                    }); ;*/
 
                 }
                 return;
             }
         }
-
-        private async Task InsertImage(string storeID, string categoryID, string url)
-        {
-            ImageDto image = new ImageDto()
-            {
-                Url = url,
-            };
-            await imageService.CreateImage(storeID, categoryID, image);
-        }
-
         public async Task<List<CardStoreDto>> GetStoreNearByAsync(GetStoreNearByDto getStoreNearByDto)
         {
             var box = MapCoordinates.GetBoundingBox(new MapPoint()

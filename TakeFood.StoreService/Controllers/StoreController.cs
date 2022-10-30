@@ -21,11 +21,17 @@ namespace StoreService.Controllers
 
         [HttpPost]
         [Route("CreateStore")]
-        public async Task<IActionResult> CreateStoreAsync(string OwnerID,[FromBody] CreateStoreDto store)
+        public async Task<IActionResult> CreateStoreAsync(string OwnerID,[FromForm] CreateStoreDto store)
         {
-            await _StoreService.CreateStore(OwnerID, store);
-
-            return Ok();
+            try
+            {
+                await _StoreService.CreateStore(OwnerID, store);
+                return Ok();
+            }
+            catch(Exception err)
+            {
+                return BadRequest(err.Message);
+            }
         }
 
         [HttpPost]

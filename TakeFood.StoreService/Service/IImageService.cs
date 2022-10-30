@@ -10,5 +10,6 @@ namespace TakeFood.StoreService.Service
         Task CreateImage(string storeID, string categoryID, string Type, IFormFile image);
         Task UpdateImage(string id, ImageDto image);
         Task DeleteImage(String id);
+        Task<String> GetStoreSlug(string storeId);
     }
 }

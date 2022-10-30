@@ -16,4 +16,6 @@ public class CardStoreDto
     public double Distance { get; set; }
     [JsonPropertyName("address")]
     public string Address { get; set; }
+    [JsonPropertyName("img")]
+    public string Image { get; set; }
 }

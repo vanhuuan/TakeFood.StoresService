@@ -4,6 +4,8 @@ namespace TakeFood.StoreService.ViewModel.Dtos.Food
 {
     public class FoodView
     {
+        [JsonPropertyName("FoodId")]
+        public string FoodId { get; set; }
         [JsonPropertyName("Name")]
         public string Name { get; set; }
 

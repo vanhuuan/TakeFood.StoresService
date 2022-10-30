@@ -79,6 +79,11 @@ namespace TakeFood.StoreService.Service.Implement
             throw new NotImplementedException();
         }
 
+        public async Task<string> GetStoreSlug(string storeId)
+        {
+            return (await ImageRepository.FindOneAsync(x => x.StoreId == storeId)).Url;
+        }
+
         public Task UpdateImage(string id, ImageDto image)
         {
             throw new NotImplementedException();

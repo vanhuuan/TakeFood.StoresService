@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
 using StoreService.Middleware;
 using StoreService.Service;
 using System.ComponentModel.DataAnnotations;
@@ -37,16 +36,17 @@ namespace StoreService.Controllers
         [HttpPost]
         [Authorize]
         [Route("GetNearBy")]
-        public async Task<IActionResult> GetStoreNearByAsync([FromBody] GetStoreNearByDto dto)
+        public async Task<ActionResult<List<CardStoreDto>>> GetStoreNearByAsync([FromBody] GetStoreNearByDto dto)
         {
             try
             {
                 var list = await _StoreService.GetStoreNearByAsync(dto);
-                return Ok(list.ToJson());
+                return list;
             }
             catch (Exception err)
             {
-                return BadRequest(err.Message);
+                Console.WriteLine(err.Message);
+                throw err;
             }
         }
 
@@ -58,7 +58,7 @@ namespace StoreService.Controllers
             try
             {
                 var list = await _StoreService.FilterStoreNearByAsync(dto);
-                return Ok(list.ToJson()); ;
+                return Ok(list); ;
             }
             catch (Exception err)
             {
@@ -75,7 +75,24 @@ namespace StoreService.Controllers
             {
                 var list = await _StoreService.FindStoreByNameAsync(name, lat, lng, start);
 
-                return Ok(list.ToJson());
+                return Ok(list);
+            }
+            catch (Exception err)
+            {
+                return BadRequest(err.Message);
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("GetStore")]
+        public async Task<IActionResult> GetStoreById([Required] string storeId, [Required] double lat, [Required] double lng)
+        {
+            try
+            {
+                var store = await _StoreService.GetStoreDetailAsync(storeId, lat, lng);
+
+                return Ok(store);
             }
             catch (Exception err)
             {

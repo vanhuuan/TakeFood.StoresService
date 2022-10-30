@@ -1,8 +1,9 @@
 ﻿namespace StoreService.Model.Entities.Order;
 
-public class Order
+public class Order : ModelMongoDB
 {
     public string UserId { get; set; }
+    public string StoreId { get; set; }
     public string PhoneNumber { get; set; }
     public string AddressId { get; set; }
     public DateTime ReceiveTime { get; set; }

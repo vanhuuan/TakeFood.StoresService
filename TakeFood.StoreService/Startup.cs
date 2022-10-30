@@ -9,6 +9,8 @@ using StoreService.Model.Entities.Address;
 using StoreService.Model.Entities.Category;
 using StoreService.Model.Entities.Food;
 using StoreService.Model.Entities.Image;
+using StoreService.Model.Entities.Order;
+using StoreService.Model.Entities.Review;
 using StoreService.Model.Entities.Role;
 using StoreService.Model.Entities.Store;
 using StoreService.Model.Entities.Topping;
@@ -150,6 +152,8 @@ public class Startup
         services.AddMongoRepository<StoreCategory>(appSetting.NoSQL.Collections.StoreCategory);
         services.AddMongoRepository<Topping>(appSetting.NoSQL.Collections.Topping);
         services.AddMongoRepository<FoodTopping>(appSetting.NoSQL.Collections.FoodTopping);
+        services.AddMongoRepository<Review>(appSetting.NoSQL.Collections.Review);
+        services.AddMongoRepository<Order>(appSetting.NoSQL.Collections.Order);
 
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IMailService, MailService>();

@@ -78,6 +78,23 @@ namespace StoreService.Controllers
         }
 
         [HttpGet]
+        [Authorize]
+        [Route("GetStore")]
+        public async Task<IActionResult> GetStoreById([Required] string storeId, [Required] double lat, [Required] double lng)
+        {
+            try
+            {
+                var store = await _StoreService.GetStoreDetailAsync(storeId, lat, lng);
+
+                return Ok(store);
+            }
+            catch (Exception err)
+            {
+                return BadRequest(err.Message);
+            }
+        }
+
+        [HttpGet]
         [Authorize(roles: Roles.Admin)]
         [Route("InsertStore")]
         public async Task<IActionResult> InsertStoreAsync()

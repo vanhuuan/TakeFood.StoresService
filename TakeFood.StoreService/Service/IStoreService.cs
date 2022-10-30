@@ -25,5 +25,10 @@ namespace StoreService.Service
         /// </summary>
         /// <returns></returns>
         Task<List<CardStoreDto>> FindStoreByNameAsync(string keyword, double lat, double lng, int start);
+        /// <summary>
+        /// Get Store details
+        /// </summary>
+        /// <returns></returns>
+        Task<StoreDetailsDto> GetStoreDetailAsync(string storeId, double lat, double lng);
     }
 }

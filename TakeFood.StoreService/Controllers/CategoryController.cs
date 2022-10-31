@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StoreService.Middleware;
 using StoreService.Service;
 using StoreService.ViewModel.Dtos.Category;
 using TakeFood.StoreService.Controllers;
+using TakeFood.StoreService.Model.Entities;
 
 namespace StoreService.Controllers
 {
@@ -17,7 +19,8 @@ namespace StoreService.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> createStore(CategoryDto category)
+        [Authorize(roles: Roles.ShopeOwner)]
+        public async Task<IActionResult> createCategory(CategoryDto category)
         {
             await _categoryService.CreateCategory(category);
 
@@ -37,6 +40,7 @@ namespace StoreService.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(roles: Roles.ShopeOwner)]
         public async Task<IActionResult> Update(string id, CategoryDto category)
         {
             var _category = await _categoryService.GetCategoryById(id);
@@ -48,6 +52,7 @@ namespace StoreService.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(roles: Roles.ShopeOwner)]
         public async Task<IActionResult> Delete(string id)
         {
             var category = await _categoryService.GetCategoryById(id);

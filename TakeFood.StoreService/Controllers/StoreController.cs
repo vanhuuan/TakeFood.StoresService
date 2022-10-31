@@ -19,6 +19,7 @@ namespace StoreService.Controllers
         }
 
         [HttpPost]
+        [Authorize(roles: Roles.User)]
         [Route("CreateStore")]
         public async Task<IActionResult> CreateStoreAsync(string OwnerID,[FromForm] CreateStoreDto store)
         {

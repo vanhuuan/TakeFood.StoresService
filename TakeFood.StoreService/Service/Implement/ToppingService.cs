@@ -28,6 +28,18 @@ namespace TakeFood.StoreService.Service.Implement
             await _ToppingRepository.InsertAsync(toppingNew);
         }
 
+        public async Task<ToppingViewDto> GetToppingByID(string ToppingID)
+        {
+            Topping topping = await _ToppingRepository.FindByIdAsync(ToppingID);
+            return new ToppingViewDto()
+            {
+                Name = topping.Name,
+                Price = topping.Price,
+                ID = ToppingID,
+                State = topping.State
+            };
+        }
+
         public async Task DeleteTopping(string ID)
         {
             Topping topping = await _ToppingRepository.FindOneAsync(x => x.Id == ID);

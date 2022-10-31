@@ -58,7 +58,7 @@ namespace StoreService.Controllers
             try
             {
                 var list = await _StoreService.FilterStoreNearByAsync(dto);
-                return Ok(list); ;
+                return Ok(list);
             }
             catch (Exception err)
             {

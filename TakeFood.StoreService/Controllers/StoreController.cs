@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StoreService.Middleware;
 using StoreService.Service;
 using System.ComponentModel.DataAnnotations;
 using TakeFood.StoreService.Controllers;
-using TakeFood.StoreService.Model.Entities;
 using TakeFood.StoreService.ViewModel.Dtos.Store;
 
 
@@ -19,23 +17,21 @@ namespace StoreService.Controllers
         }
 
         [HttpPost]
-        [Authorize(roles: Roles.User)]
         [Route("CreateStore")]
-        public async Task<IActionResult> CreateStoreAsync(string OwnerID,[FromForm] CreateStoreDto store)
+        public async Task<IActionResult> CreateStoreAsync(string OwnerID, [FromForm] CreateStoreDto store)
         {
             try
             {
                 await _StoreService.CreateStore(OwnerID, store);
                 return Ok();
             }
-            catch(Exception err)
+            catch (Exception err)
             {
                 return BadRequest(err.Message);
             }
         }
 
         [HttpPost]
-        [Authorize]
         [Route("GetNearBy")]
         public async Task<ActionResult<List<CardStoreDto>>> GetStoreNearByAsync([FromBody] GetStoreNearByDto dto)
         {
@@ -52,7 +48,6 @@ namespace StoreService.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         [Route("FilterNearByWithCategory")]
         public async Task<IActionResult> FilterStoreNearByAsync([FromBody] FilterStoreByCategoryId dto)
         {
@@ -68,7 +63,6 @@ namespace StoreService.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         [Route("FindStore")]
         public async Task<IActionResult> FindStoreAsync([Required] string name, [Required] double lat, [Required] double lng, [Required] int start)
         {
@@ -85,7 +79,6 @@ namespace StoreService.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         [Route("GetStore")]
         public async Task<IActionResult> GetStoreById([Required] string storeId, [Required] double lat, [Required] double lng)
         {
@@ -102,7 +95,6 @@ namespace StoreService.Controllers
         }
 
         [HttpGet]
-        [Authorize(roles: Roles.Admin)]
         [Route("InsertStore")]
         public async Task<IActionResult> InsertStoreAsync()
         {
@@ -112,7 +104,6 @@ namespace StoreService.Controllers
         }
 
         [HttpGet]
-        [Authorize(roles: Roles.Admin)]
         [Route("InsertMenu")]
         public async Task<IActionResult> InsertMenuStoreAsync()
         {

@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StoreService.Service;
 using TakeFood.StoreService.Controllers;
-using StoreService.Model.Entities.Food;
 using TakeFood.StoreService.ViewModel.Dtos.Food;
-using TakeFood.StoreService.Model.Entities;
-using StoreService.Middleware;
 
 namespace StoreService.Controllers
 {
@@ -20,7 +17,6 @@ namespace StoreService.Controllers
         }
 
         [HttpPost("{StoreID}")]
-        [Authorize(roles: Roles.ShopeOwner)]
         public async Task<IActionResult> CreateFood(string StoreID, CreateFoodDto food)
         {
             await _FoodService.CreateFood(StoreID, food);
@@ -29,7 +25,6 @@ namespace StoreService.Controllers
         }
 
         [HttpPut]
-        [Authorize(roles: Roles.ShopeOwner)]
         public async Task<IActionResult> UpdateFood(string FoodID, CreateFoodDto foodUpdate)
         {
             await _FoodService.UpdateFood(FoodID, foodUpdate);
@@ -38,7 +33,6 @@ namespace StoreService.Controllers
         }
 
         [HttpDelete]
-        [Authorize(roles: Roles.ShopeOwner)]
         public async Task<IActionResult> DeleteFood(string id)
         {
             await _FoodService.DeleteFood(id);
@@ -47,21 +41,21 @@ namespace StoreService.Controllers
         }
 
         [HttpGet("GetAllFoodByStore/{StoreID}")]
-        [Authorize]
+
         public async Task<List<FoodView>> getAllFoodByStore(string StoreID)
         {
             return await _FoodService.GetAllFoodsByStoreID(StoreID);
         }
 
         [HttpGet("GetAllFoodByCategory/{CategoryID}")]
-        [Authorize]
+
         public async Task<List<FoodView>> GetAllFoodByCategory(string CategoryID)
         {
             return await _FoodService.GetAllFoodsByCategory(CategoryID);
         }
 
         [HttpGet("GetFoodViewMobile/{FoodID}")]
-        [Authorize]
+
         public async Task<JsonResult> GetFoodViewMobile(string FoodID)
         {
             return new JsonResult(await _FoodService.GetFoodByID(FoodID));

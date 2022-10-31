@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StoreService.Service;
 using TakeFood.StoreService.Service;
 using TakeFood.StoreService.ViewModel.Dtos.Address;
 
@@ -7,7 +6,7 @@ namespace TakeFood.StoreService.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AddressController:BaseController
+    public class AddressController : BaseController
     {
         public readonly IAddressService _addressService;
         public AddressController(IAddressService addressService)

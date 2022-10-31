@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StoreService.Middleware;
-using System.ComponentModel;
-using TakeFood.StoreService.Model.Entities;
 using TakeFood.StoreService.Service;
 using TakeFood.StoreService.ViewModel.Dtos.Topping;
 
@@ -19,7 +16,6 @@ namespace TakeFood.StoreService.Controllers
         }
 
         [HttpPost("{StoreID}")]
-        [Authorize(roles: Roles.ShopeOwner)]
         public async Task<IActionResult> CreateTopping(string StoreID, CreateToppingDto createToppingDto)
         {
             await _toppingService.CreateTopping(StoreID, createToppingDto);
@@ -34,21 +30,18 @@ namespace TakeFood.StoreService.Controllers
         }
 
         [HttpGet("/GetToppingActive/{StoreID}")]
-        [Authorize(roles: Roles.ShopeOwner)]
         public async Task<List<ToppingViewDto>> getAllToppingActive(string StoreID)
         {
             return await _toppingService.GetAllToppingByStoreID(StoreID, "Active");
         }
 
         [HttpGet("/GetToppingDeActive/{StoreID}")]
-        [Authorize(roles: Roles.ShopeOwner)]
         public async Task<List<ToppingViewDto>> getAllToppingDeActive(string StoreID)
         {
             return await _toppingService.GetAllToppingByStoreID(StoreID, "DeActive");
         }
 
         [HttpPut]
-        [Authorize(roles: Roles.ShopeOwner)]
         public async Task<IActionResult> Update(string id, CreateToppingDto updateTopping)
         {
             await _toppingService.UpdateTopping(id, updateTopping);
@@ -57,7 +50,6 @@ namespace TakeFood.StoreService.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(roles: Roles.ShopeOwner)]
         public async Task<IActionResult> Delete(String id)
         {
             await _toppingService.DeleteTopping(id);

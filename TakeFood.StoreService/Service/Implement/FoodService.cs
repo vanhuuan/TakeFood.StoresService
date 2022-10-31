@@ -108,7 +108,7 @@ namespace StoreService.Service.Implement
 
                 if (food.CategoriesID.Count > 0)
                 {
-                    FoodTemp.Category = (await _categoryRepository.FindOneAsync(x => x.Id == food.CategoriesID[0])).Name;
+                    FoodTemp.Category = (await _categoryRepository.FindOneAsync(x => x.Id == (food.CategoriesID)[0])).Name;
                 }
 
                 foreach (var i in await _foodToppingRepository.FindAsync(x => x.FoodId == food.Id))

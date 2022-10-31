@@ -15,6 +15,7 @@ using StoreService.Model.Entities.Role;
 using StoreService.Model.Entities.Store;
 using StoreService.Model.Entities.Topping;
 using StoreService.Model.Entities.User;
+using StoreService.Model.Entities.WorkTime;
 using StoreService.Model.Repository;
 using StoreService.Service;
 using StoreService.Service.Implement;
@@ -152,6 +153,7 @@ public class Startup
         services.AddMongoRepository<StoreCategory>(appSetting.NoSQL.Collections.StoreCategory);
         services.AddMongoRepository<Topping>(appSetting.NoSQL.Collections.Topping);
         services.AddMongoRepository<FoodTopping>(appSetting.NoSQL.Collections.FoodTopping);
+        services.AddMongoRepository<WorkTime>(appSetting.NoSQL.Collections.WorkTime);
         services.AddMongoRepository<Review>(appSetting.NoSQL.Collections.Review);
         services.AddMongoRepository<Order>(appSetting.NoSQL.Collections.Order);
 

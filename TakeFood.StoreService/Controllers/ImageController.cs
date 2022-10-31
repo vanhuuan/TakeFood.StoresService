@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿/*using Microsoft.AspNetCore.Mvc;
 using TakeFood.StoreService.Service;
 using TakeFood.StoreService.ViewModel.Dtos.Image;
 
@@ -6,7 +6,7 @@ namespace TakeFood.StoreService.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ImageController:BaseController
+    public class ImageController : BaseController
     {
         private readonly IImageService Imageservice;
 
@@ -24,3 +24,4 @@ namespace TakeFood.StoreService.Controllers
         }
     }
 }
+*/

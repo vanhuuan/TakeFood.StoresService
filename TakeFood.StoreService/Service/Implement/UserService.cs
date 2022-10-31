@@ -142,6 +142,19 @@ public class UserService : IUserService
         }
     }
 
+    public async Task UpdateRole(string UserID)
+    {
+        var user = await userRepository.FindByIdAsync(UserID);
+        user.RoleIds.Add("3");
+
+        await userRepository.UpdateAsync(user);
+    }
+
+    public async Task<Boolean> HasStore(string UserID)
+    {
+        return await userRepository.FindOneAsync(x => x.Id == UserID && x.RoleIds.Contains("3")) != null;
+    }
+
     public Task Active(string token)
     {
         return null;

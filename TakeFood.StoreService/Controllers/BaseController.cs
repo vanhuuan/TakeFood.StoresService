@@ -8,5 +8,10 @@ namespace TakeFood.StoreService.Controllers
         {
 
         }
+        public string GetId()
+        {
+            String id = HttpContext.Items["Id"]!.ToString()!;
+            return id;
+        }
     }
 }

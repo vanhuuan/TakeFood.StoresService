@@ -116,6 +116,7 @@ public class StoreService : IStoreService
                     Url = img.value,
                 });
             }
+
         }
         return;
     }
@@ -134,58 +135,39 @@ public class StoreService : IStoreService
                 await foodService.CreateFood(store.Id, new CreateFoodDto()
                 {
                     Name = i.name,
-                    PhoneNumber = i.phoneNumber,
-                    State = "Active",
-                    SumStar = 0,
-                    NumReiview = 0,
-                    OwnerId = i.id.ToString(),
-                    TaxId = "0102859048",
-                    AddressId = address.Id,
-
-                };
-                await storeRepository.InsertAsync(store);
-                /*foreach (var img in i.img)
-                {
-                    await imageService.CreateImage(store.Id, "Store", new ImageDto()
-                    {
-                        Url = img.value,
-                    });
-                }*/
-
+                    Descript = i.description,
+                    urlImage = i.photo,
+                    State = true,
+                    Price = i.price,
+                    CategoriesID = "",
+                    ListTopping = new List<ToppingCreateFoodDto>()
+                }); ;
 
             }
             return;
         }
-        
-        public async Task InertMenuCrawlDataAsync()
+    }
+
+    private async Task InsertImage(string storeID, string categoryID, string url)
+    {
+        ImageDto image = new ImageDto()
         {
-            List<Root2> items;
-            using (StreamReader r = new StreamReader("menu.json"))
-            {
-                string json = r.ReadToEnd();
-                items = JsonSerializer.Deserialize<List<Root2>>(json)!;
+            Url = url,
+        };
+        await imageService.CreateImage(storeID, categoryID, image);
+    }
 
-                foreach (var i in items)
-                {
-                    var store = await storeRepository.FindOneAsync(x => x.OwnerId == i.id.ToString());
-
-                    /*await foodService.CreateFood(store.Id, new CreateFoodDto()
-                    {
-                        Name = i.name,
-                        Descript = i.description,
-                        urlImage = i.photo,
-                        State = true,
-                        Price = i.price,
-                        CategoriesID = "",
-                        ListTopping = new List<ToppingCreateFoodDto>()
-                    }); ;*/
-
-                }
-                return;
-            }
-        }
-        public async Task<List<CardStoreDto>> GetStoreNearByAsync(GetStoreNearByDto getStoreNearByDto)
-
+    public async Task<List<CardStoreDto>> GetStoreNearByAsync(GetStoreNearByDto getStoreNearByDto)
+    {
+        var box = MapCoordinates.GetBoundingBox(new MapPoint()
+        {
+            Latitude = getStoreNearByDto.Lat,
+            Longitude = getStoreNearByDto.Lng
+        }, getStoreNearByDto.RadiusOut);
+        IList<Address> storeAddress;
+        IEnumerable<string> ids;
+        storeAddress = await addressRepository.FindAsync(x => x.AddressType == "Store" && box.MinPoint.Latitude <= x.Lat && x.Lat <= box.MaxPoint.Latitude && box.MinPoint.Longitude <= x.Lng && x.Lng <= box.MaxPoint.Longitude);
+        if (getStoreNearByDto.RadiusIn != 0)
         {
             var inBox = MapCoordinates.GetBoundingBox(new MapPoint()
             {

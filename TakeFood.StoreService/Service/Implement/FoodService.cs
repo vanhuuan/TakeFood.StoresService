@@ -2,7 +2,9 @@
 using StoreService.Model.Entities.Food;
 using StoreService.Model.Entities.Topping;
 using StoreService.Model.Repository;
+using TakeFood.StoreService.Service;
 using TakeFood.StoreService.ViewModel.Dtos.Food;
+using TakeFood.StoreService.ViewModel.Dtos.Topping;
 
 namespace StoreService.Service.Implement
 {
@@ -12,14 +14,16 @@ namespace StoreService.Service.Implement
         private readonly IMongoRepository<FoodTopping> _foodToppingRepository;
         private readonly IMongoRepository<Category> _categoryRepository;
         private readonly IMongoRepository<Topping> _toppingRepository;
+        private readonly IToppingService _toppingService;
 
         public FoodService(IMongoRepository<Food> foodRepository, IMongoRepository<FoodTopping> foodToppingRepository
-                        , IMongoRepository<Category> categoryRepository, IMongoRepository<Topping> toppingRepository)
+                        , IMongoRepository<Category> categoryRepository, IMongoRepository<Topping> toppingRepository, IToppingService toppingService)
         {
             _foodRepository = foodRepository;
             _foodToppingRepository = foodToppingRepository;
             _categoryRepository = categoryRepository;
             _toppingRepository = toppingRepository;
+            _toppingService = toppingService;
         }
 
         public async Task CreateFood(string StoreID, CreateFoodDto food)
@@ -55,6 +59,31 @@ namespace StoreService.Service.Implement
 
             food.State = false;
             await _foodRepository.UpdateAsync(food);
+        }
+
+        public async Task<FoodViewMobile> GetFoodByID(string FoodID)
+        {
+            Food f = await _foodRepository.FindByIdAsync(FoodID);
+            List<ToppingViewDto> toppingListID = new List<ToppingViewDto>();
+
+            FoodViewMobile foodViewMobile = new FoodViewMobile()
+            {
+                FoodId = FoodID,
+                Name = f.Name,
+                Description = f.Description,
+                UrlImage = f.ImgUrl,
+                Price = f.Price,
+                Category = f.CategoriesID.Count > 0 ? f.CategoriesID[0] : "",
+                State = f.State == true ? "active" : "deactive"
+            };
+
+            foreach (var i in await _foodToppingRepository.FindAsync(x => x.FoodId == FoodID))
+            {
+                ToppingViewDto toppingview = await _toppingService.GetToppingByID(i.ToppingId);
+                foodViewMobile.ListTopping.Add(toppingview);
+            }
+
+            return foodViewMobile;
         }
 
         public async Task<List<FoodView>> GetAllFoodsByCategory(string CategoryID)

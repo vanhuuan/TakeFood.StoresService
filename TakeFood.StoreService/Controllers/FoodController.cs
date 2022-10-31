@@ -52,5 +52,11 @@ namespace StoreService.Controllers
         {
             return await _FoodService.GetAllFoodsByCategory(CategoryID);
         }
+
+        [HttpGet("GetFoodViewMobile/{FoodID}")]
+        public async Task<JsonResult> GetFoodViewMobile(string FoodID)
+        {
+            return new JsonResult(await _FoodService.GetFoodByID(FoodID));
+        }
     }
 }

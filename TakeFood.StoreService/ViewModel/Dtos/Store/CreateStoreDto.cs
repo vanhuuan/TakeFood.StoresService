@@ -17,18 +17,18 @@ namespace TakeFood.StoreService.ViewModel.Dtos.Store
         [JsonPropertyName("address")]
         [NotNull]
         public StoreAddressDto StoreAddress { get; set; }
-        
+
         [JsonPropertyName("urlStoreImage")]
         [NotNull]
-        public IFormFile urlStoreImage { get; set; }
+        public string urlStoreImage { get; set; }
 
         [JsonPropertyName("urlKitchenImage")]
         [NotNull]
-        public IFormFile urlKitchenImage { get; set; }
+        public string urlKitchenImage { get; set; }
 
         [JsonPropertyName("urlMenuImage")]
         [NotNull]
-        public IFormFile urlMenuImage { get; set; }
+        public string urlMenuImage { get; set; }
 
         [JsonPropertyName("nameOwner")]
         [NotNull]
@@ -40,15 +40,15 @@ namespace TakeFood.StoreService.ViewModel.Dtos.Store
 
         [JsonPropertyName("urlFontCmndImage")]
         [NotNull]
-        public IFormFile urlFontCmndImage { get; set; }
+        public string urlFontCmndImage { get; set; }
 
         [JsonPropertyName("urlBackCmndImage")]
         [NotNull]
-        public IFormFile urlBackCmndImage { get; set; }
+        public string urlBackCmndImage { get; set; }
 
         [JsonPropertyName("urlLicenseImage")]
         [NotNull]
-        public IFormFile urlLicenseImage { get; set; }
+        public string urlLicenseImage { get; set; }
 
         [JsonPropertyName("nameSTKOwner")]
         [NotNull]

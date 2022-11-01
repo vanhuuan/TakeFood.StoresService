@@ -18,12 +18,13 @@ public class StoreService : IStoreService
     private readonly IMongoRepository<Address> addressRepository;
     private readonly IImageService imageService;
     private readonly IFoodService foodService;
+    private readonly IUserService userService;
     private readonly IMongoRepository<StoreCategory> storeCateRepository;
     private readonly IMongoRepository<Review> reviewRepository;
     private readonly IMongoRepository<Order> orderRepository;
     public StoreService(IMongoRepository<Store> storeRepository, IMongoRepository<Address> addressRepository
         , IImageService imageService, IMongoRepository<StoreCategory> storeCateRepository, IFoodService foodService
-        , IMongoRepository<Review> reviewRepository, IMongoRepository<Order> orderRepository)
+        , IMongoRepository<Review> reviewRepository, IMongoRepository<Order> orderRepository, IUserService userService)
     {
         this.storeRepository = storeRepository;
         this.addressRepository = addressRepository;
@@ -32,6 +33,7 @@ public class StoreService : IStoreService
         this.foodService = foodService;
         this.reviewRepository = reviewRepository;
         this.orderRepository = orderRepository;
+        this.userService = userService;
     }
 
     public async Task CreateStore(string ownerID, CreateStoreDto store)
@@ -69,6 +71,8 @@ public class StoreService : IStoreService
         await InsertImage(_store.Id, "6354d80dd64447e2509cb9fe", store.urlFontCmndImage);
         await InsertImage(_store.Id, "6354d818d64447e2509cb9ff", store.urlBackCmndImage);
         await InsertImage(_store.Id, "6354d82cd64447e2509cba00", store.urlLicenseImage);
+
+        await userService.UpdateRole(ownerID);
     }
 
     public List<Store> getAllStores()

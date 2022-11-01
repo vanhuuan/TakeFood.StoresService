@@ -5,6 +5,7 @@ using StoreService.Model.Entities.Food;
 using TakeFood.StoreService.ViewModel.Dtos.Food;
 using TakeFood.StoreService.Model.Entities;
 using StoreService.Middleware;
+using System.ComponentModel.DataAnnotations;
 
 namespace StoreService.Controllers
 {
@@ -46,11 +47,18 @@ namespace StoreService.Controllers
             return Ok();
         }
 
-        [HttpGet("GetAllFoodByStore/{StoreID}")]
+        [HttpGet("GetAllFoodByStore")]
         [Authorize]
-        public async Task<List<FoodView>> getAllFoodByStore(string StoreID)
+        public async Task<IActionResult> getAllFoodByStore([Required]string StoreID)
         {
-            return await _FoodService.GetAllFoodsByStoreID(StoreID);
+            try
+            {
+                var foodList = await _FoodService.GetAllFoodsByStoreID(StoreID);
+                return Ok(foodList);
+            }catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet("GetAllFoodByCategory/{CategoryID}")]
@@ -60,11 +68,18 @@ namespace StoreService.Controllers
             return await _FoodService.GetAllFoodsByCategory(CategoryID);
         }
 
-        [HttpGet("GetFoodViewMobile/{FoodID}")]
+        [HttpGet("GetFoodViewMobile")]
         [Authorize]
-        public async Task<JsonResult> GetFoodViewMobile(string FoodID)
+        public async Task<IActionResult> GetFoodViewMobile([Required]string FoodID)
         {
-            return new JsonResult(await _FoodService.GetFoodByID(FoodID));
+            try
+            {
+                var food = new JsonResult(await _FoodService.GetFoodByID(FoodID));
+                return Ok(food);
+            }catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }

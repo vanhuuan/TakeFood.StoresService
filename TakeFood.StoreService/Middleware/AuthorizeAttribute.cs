@@ -22,7 +22,7 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
                 role = "User";
                 break;
             case Roles.ShopeOwner:
-                role = "ShopeOwner";
+                role = "Store_Owner";
                 break;
             default:
                 role = "User";

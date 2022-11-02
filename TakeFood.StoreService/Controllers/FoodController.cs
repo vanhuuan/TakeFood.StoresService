@@ -74,7 +74,8 @@ namespace StoreService.Controllers
         {
             try
             {
-                var food = new JsonResult(await _FoodService.GetFoodByID(FoodID));
+                FoodViewMobile fMoble = await _FoodService.GetFoodByID(FoodID);
+                var food = new JsonResult(fMoble);
                 return Ok(food);
             }catch(Exception e)
             {

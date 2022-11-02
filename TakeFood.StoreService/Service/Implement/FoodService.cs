@@ -80,8 +80,9 @@ namespace StoreService.Service.Implement
             foreach (var i in await _foodToppingRepository.FindAsync(x => x.FoodId == FoodID))
             {
                 ToppingViewDto toppingview = await _toppingService.GetToppingByID(i.ToppingId);
-                foodViewMobile.ListTopping.Add(toppingview);
+                toppingListID.Add(toppingview);
             }
+            foodViewMobile.ListTopping = toppingListID;
 
             return foodViewMobile;
         }

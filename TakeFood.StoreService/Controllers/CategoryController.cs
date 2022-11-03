@@ -34,6 +34,7 @@ namespace StoreService.Controllers
         }
 
         [HttpGet]
+        [Route("GetStoreCategory")]
         public async Task<List<CategoryDto>> getAllStoreCategory()
         {
             return await _categoryService.GetAllStoreCategories();

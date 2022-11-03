@@ -35,13 +35,13 @@ namespace StoreService.Service.Implement
 
         public async Task<List<CategoryDto>> GetAllCategories()
         {
-            var categories = await cateRepository.GetAllAsync();
+            var categories = await cateRepository.FindAsync();
 
             List<CategoryDto> categoryList = new List<CategoryDto>();
 
             foreach (var category in categories)
             {
-                categoryList.Add(new CategoryDto() { Name = category.Name, CategoryId = category.Id });
+                categoryList.Add(new CategoryDto() { Name = category.Name, CategoryId = category.Id, Type = category.Type });
             }
 
             return categoryList; 
@@ -55,7 +55,7 @@ namespace StoreService.Service.Implement
 
             foreach (var category in categories)
             {
-                categoryList.Add(new CategoryDto() { Name = category.Name, CategoryId = category.Id });
+                categoryList.Add(new CategoryDto() { Name = category.Name, CategoryId = category.Id, Type = category.Type });
             }
 
             return categoryList;

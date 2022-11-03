@@ -21,7 +21,7 @@ namespace StoreService.Controllers
         [HttpPost]
         [Authorize(roles: Roles.User)]
         [Route("CreateStore")]
-        public async Task<IActionResult> CreateStoreAsync(string OwnerID,[FromForm] CreateStoreDto store)
+        public async Task<IActionResult> CreateStoreAsync(string OwnerID,CreateStoreDto store)
         {
             try
             {
@@ -32,6 +32,22 @@ namespace StoreService.Controllers
             {
                 return BadRequest(err.Message);
             }
+        }
+
+        [HttpGet]
+        [Route("GetStoreByOwner")]
+        public async Task<JsonResult> GetStoreByOwnerID(string ownerID)
+        {
+            StoreOwnerDto store = await _StoreService.getStoreByOwnerID(ownerID);
+            try
+            {
+                var result = new JsonResult(store);
+                return result;
+            }catch(Exception e)
+            {
+                return new JsonResult(e);
+            }
+
         }
 
         [HttpPost]
@@ -47,7 +63,7 @@ namespace StoreService.Controllers
             catch (Exception err)
             {
                 Console.WriteLine(err.Message);
-                throw err;
+                throw;
             }
         }
 

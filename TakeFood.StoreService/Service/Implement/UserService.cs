@@ -54,27 +54,33 @@ public class UserService : IUserService
     {
         var user = await userRepository.FindByIdAsync(id);
         var account = await accountRepository.FindOneAsync(x => x.UserId == id);
-
-        var view = new UserViewDto()
+        if (user != null && account != null)
         {
-            Name = user.Name,
-            Email = account.Email,
-            Photo = user.Avatar,
-            Id = user.Id,
-            Phone = user.PhoneNumber
-
-        };
-        var role = new List<String>();
-        var listRole = await roleRepository.GetAllAsync();
-        foreach (var i in listRole)
-        {
-            if (user.RoleIds.Contains(i.Id))
+            var view = new UserViewDto()
             {
-                role.Add(i.Name!);
+                Name = user.Name,
+                Email = account.Email,
+                Photo = user.Avatar,
+                Id = user.Id,
+                Phone = user.PhoneNumber
+
+            };
+            var role = new List<String>();
+            var listRole = await roleRepository.GetAllAsync();
+            foreach (var i in listRole)
+            {
+                if (user.RoleIds.Contains(i.Id))
+                {
+                    role.Add(i.Name!);
+                }
             }
+            view.Roles = role;
+            return view;
         }
-        view.Roles = role;
-        return view;
+        else
+        {
+            return null;
+        }
     }
 
     /// <summary>

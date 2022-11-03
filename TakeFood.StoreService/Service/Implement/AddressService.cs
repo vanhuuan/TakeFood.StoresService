@@ -19,7 +19,7 @@ namespace TakeFood.StoreService.Service.Implement
             {
                 Information = address.information != null ? address.information : address.address,
                 Addrress = address.address,
-                AddressType = address.addressType != null ? address.addressType : "Cửa hàng",
+                AddressType = address.addressType != null ? address.addressType : "Cá nhân",
                 Lat = address.lat,
                 Lng = address.lng,
             };

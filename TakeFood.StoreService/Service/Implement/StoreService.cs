@@ -1,7 +1,9 @@
 using StoreService.Model.Entities.Address;
+using StoreService.Model.Entities.Food;
 using StoreService.Model.Entities.Order;
 using StoreService.Model.Entities.Review;
 using StoreService.Model.Entities.Store;
+using StoreService.Model.Entities.User;
 using StoreService.Model.Repository;
 using System.Text.Json;
 using TakeFood.StoreService.Service;
@@ -52,6 +54,10 @@ public class StoreService : IStoreService
             SumStar = 0,
             NumReiview = 0,
             TaxId = store.TaxID,
+            STK = store.STK,
+            email = await userService.GetUserByIdAsync(ownerID) != null ? (await userService.GetUserByIdAsync(ownerID)).Email : "pnquang2405@gmail.com",
+            CMND = store.cmnd,
+            
         };
 
         foreach (var category in store.Categories)
@@ -334,6 +340,33 @@ public class StoreService : IStoreService
             Foods = foodsDetail
         };
         return details;
+    }
+
+    public async Task<StoreOwnerDto?> getStoreByOwnerID(string ownerID)
+    {
+        Store store = await storeRepository.FindOneAsync(x => x.OwnerId == ownerID);
+
+        if (store != null)
+        {
+            Address address = await addressRepository.FindByIdAsync(store.AddressId);
+            int QuantityFood = (await foodService.GetAllFoodsByStoreID(store.Id)).Count;
+            StoreOwnerDto storeOwnerDto = new StoreOwnerDto()
+            {
+                StoreId = store.Id != null ? store.Id : "6358e361814c0de88aeafeba",
+                StoreName = store.Name != null ? store.Name : "Phạm Ngọc Quang",
+                Phone = store.PhoneNumber != null ? store.PhoneNumber : "0326925065",
+                NameOwner = await userService.GetUserByIdAsync(store.OwnerId) != null ? (await userService.GetUserByIdAsync(store.OwnerId)).Name : "Phạm Ngọc Quang",
+                STK = store.STK != null ? store.STK : "4212304923113",
+                Address = address != null ? address.Addrress : "Đang cập nhật địa chỉ",
+                Email = store.email != null ? store.email : "pnquang2405@gmail.com",
+                CMND = store.CMND != null ? store.CMND : "191202392",
+                NameBank = await userService.GetUserByIdAsync(store.OwnerId) != null ? (await userService.GetUserByIdAsync(store.OwnerId)).Name : "Saccombank",
+                QuantityFood = QuantityFood
+            };
+
+            return storeOwnerDto;
+        }
+        return null;
     }
 
     private class Img

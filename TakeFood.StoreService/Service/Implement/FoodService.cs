@@ -123,6 +123,7 @@ namespace StoreService.Service.Implement
             var listFood = await _foodRepository.FindAsync(x => x.StoreId == StoreID);
 
             List<FoodView> listFoodView = new();
+            List<string> ToppingName = new List<string>();
 
             foreach (Food food in listFood)
             {
@@ -138,17 +139,21 @@ namespace StoreService.Service.Implement
                 FoodTemp.ListTopping = new List<string>();
                 if (food.CategoriesID.Count > 0)
                 {
-                    FoodTemp.Category = (await _categoryRepository.FindOneAsync(x => x.Id == (food.CategoriesID)[0])).Name;
+                    if(await _categoryRepository.FindOneAsync(x => x.Id == (food.CategoriesID)[0]) != null)
+                        FoodTemp.Category = (await _categoryRepository.FindOneAsync(x => x.Id == (food.CategoriesID)[0])).Name;
                 }
+                FoodTemp.ListTopping = new();
 
                 foreach (var i in await _foodToppingRepository.FindAsync(x => x.FoodId == food.Id))
                 {
+
                     var topping = await _toppingRepository.FindOneAsync(x => x.Id == i.ToppingId);
                     if (topping != null)
                     {
                         FoodTemp.ListTopping.Add(topping.Name);
                     }
                 }
+                FoodTemp.ListTopping = ToppingName;
                 listFoodView.Add(FoodTemp);
             }
 

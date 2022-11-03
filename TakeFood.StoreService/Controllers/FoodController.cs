@@ -79,7 +79,7 @@ namespace StoreService.Controllers
                 return food;
             }catch(Exception e)
             {
-                JsonResult error = new JsonResult(e.Message);
+                JsonResult error = new(e.Message);
                 return error;
             }
         }

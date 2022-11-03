@@ -35,7 +35,7 @@ namespace StoreService.Service.Implement
 
         public async Task<List<CategoryDto>> GetAllCategories()
         {
-            var categories = await cateRepository.FindAsync();
+            var categories = await cateRepository.FindAsync(x => true);
 
             List<CategoryDto> categoryList = new List<CategoryDto>();
 

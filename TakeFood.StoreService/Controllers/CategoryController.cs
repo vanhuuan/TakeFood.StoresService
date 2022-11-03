@@ -33,6 +33,12 @@ namespace StoreService.Controllers
             return await _categoryService.GetAllCategories();
         }
 
+        [HttpGet]
+        public async Task<List<CategoryDto>> getAllStoreCategory()
+        {
+            return await _categoryService.GetAllStoreCategories();
+        }
+
         [HttpGet("{id}")]
         public async Task<CategoryDto> getCategoryById(string id)
         {

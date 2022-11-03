@@ -6,5 +6,11 @@ namespace StoreService.ViewModel.Dtos.Category
     {
         [JsonPropertyName("name")]
         public string Name { get; set; }
+
+        [JsonPropertyName("categoryId")]
+        public string CategoryId { get; set; }
+
+        [JsonPropertyName("type")]
+        public string Type { get; set; }
     }
 }

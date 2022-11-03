@@ -21,6 +21,7 @@ namespace StoreService.Service.Implement
             Category categoryNew = new Category()
             {
                 Name = category.Name,
+                Type = category.Type,
                 CreatedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now
             };
@@ -40,10 +41,24 @@ namespace StoreService.Service.Implement
 
             foreach (var category in categories)
             {
-                categoryList.Add(new CategoryDto() { Name = category.Name, });
+                categoryList.Add(new CategoryDto() { Name = category.Name, CategoryId = category.Id });
             }
 
             return categoryList; 
+        }
+
+        public async Task<List<CategoryDto>> GetAllStoreCategories()
+        {
+            var categories = await cateRepository.FindAsync(x => x.Type == "Store");
+
+            List<CategoryDto> categoryList = new List<CategoryDto>();
+
+            foreach (var category in categories)
+            {
+                categoryList.Add(new CategoryDto() { Name = category.Name, CategoryId = category.Id });
+            }
+
+            return categoryList;
         }
 
         public async Task<CategoryDto?> GetCategoryById(string id)

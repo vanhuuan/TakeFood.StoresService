@@ -136,7 +136,7 @@ namespace StoreService.Service.Implement
                     State = food.State == true ? "Còn hàng" : "Hết hàng",
                     FoodId = food.Id
                 };
-
+                FoodTemp.ListTopping = new List<string>();
                 if (food.CategoriesID.Count > 0)
                 {
                     if(await _categoryRepository.FindOneAsync(x => x.Id == (food.CategoriesID)[0]) != null)
@@ -146,8 +146,12 @@ namespace StoreService.Service.Implement
 
                 foreach (var i in await _foodToppingRepository.FindAsync(x => x.FoodId == food.Id))
                 {
-                    if(await _toppingRepository.FindOneAsync(x => x.Id == i.ToppingId) != null)
-                        ToppingName.Add((await _toppingRepository.FindOneAsync(x => x.Id == i.ToppingId)).Name);
+
+                    var topping = await _toppingRepository.FindOneAsync(x => x.Id == i.ToppingId);
+                    if (topping != null)
+                    {
+                        FoodTemp.ListTopping.Add(topping.Name);
+                    }
                 }
                 FoodTemp.ListTopping = ToppingName;
                 listFoodView.Add(FoodTemp);

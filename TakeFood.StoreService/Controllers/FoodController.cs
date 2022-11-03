@@ -70,16 +70,17 @@ namespace StoreService.Controllers
 
         [HttpGet("GetFoodViewMobile")]
         [Authorize]
-        public async Task<IActionResult> GetFoodViewMobile([Required]string FoodID)
+        public async Task<JsonResult> GetFoodViewMobile([Required]string FoodID)
         {
             try
             {
                 FoodViewMobile fMoble = await _FoodService.GetFoodByID(FoodID);
                 var food = new JsonResult(fMoble);
-                return Ok(food);
+                return food;
             }catch(Exception e)
             {
-                return BadRequest(e.Message);
+                JsonResult error = new JsonResult(e.Message);
+                return error;
             }
         }
     }

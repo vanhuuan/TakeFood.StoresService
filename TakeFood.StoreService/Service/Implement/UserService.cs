@@ -151,9 +151,16 @@ public class UserService : IUserService
     public async Task UpdateRole(string UserID)
     {
         var user = await userRepository.FindByIdAsync(UserID);
-        user.RoleIds.Add("3");
-
-        await userRepository.UpdateAsync(user);
+        try
+        {
+            user.RoleIds.Add("3");
+            await userRepository.UpdateAsync(user);
+        }
+        catch(Exception e)
+        {
+            throw;
+        }
+        
     }
 
     public async Task<Boolean> HasStore(string UserID)

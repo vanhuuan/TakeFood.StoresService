@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Amazon.S3.Model;
+using Microsoft.AspNetCore.Mvc;
 using StoreService.Middleware;
 using StoreService.Service;
 using System.ComponentModel.DataAnnotations;
@@ -25,10 +26,17 @@ namespace StoreService.Controllers
         {
             try
             {
-                await _StoreService.CreateStore(OwnerID, store);
-                return Ok();
+                if (await _StoreService.getStoreByOwnerID(OwnerID) == null)
+                {
+                    await _StoreService.CreateStore(OwnerID, store);
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest("User đã có cửa hàng");
+                }
             }
-            catch(Exception err)
+            catch (Exception err)
             {
                 return BadRequest(err.Message);
             }

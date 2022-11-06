@@ -44,12 +44,12 @@ public class StoreService : IStoreService
         {
             Information = "Tỉnh/TP: " + store.StoreAddress.province + ", Quân/Huyện: " + store.StoreAddress.district + ", Xã/Phường: " + store.StoreAddress.town,
         };
-        Store _store = new Store()
+        Store _store = new()
         {
             Name = store.StoreName,
             AddressId = (await addressRepository.InsertAsync(address)).Id,
             PhoneNumber = store.StorePhone,
-            State = "Active",
+            State = "Pending",
             OwnerId = ownerID,
             SumStar = 0,
             NumReiview = 0,
@@ -57,7 +57,6 @@ public class StoreService : IStoreService
             STK = store.STK,
             email = await userService.GetUserByIdAsync(ownerID) != null ? (await userService.GetUserByIdAsync(ownerID)).Email : "pnquang2405@gmail.com",
             CMND = store.cmnd,
-            
         };
 
         foreach (var category in store.Categories)
@@ -342,7 +341,7 @@ public class StoreService : IStoreService
         return details;
     }
 
-    public async Task<StoreOwnerDto?> getStoreByOwnerID(string ownerID)
+    public async Task<StoreOwnerDto> GetStoreByOwnerID(string ownerID)
     {
         Store store = await storeRepository.FindOneAsync(x => x.OwnerId == ownerID);
 
@@ -361,12 +360,13 @@ public class StoreService : IStoreService
                 Email = store.email != null ? store.email : "pnquang2405@gmail.com",
                 CMND = store.CMND != null ? store.CMND : "191202392",
                 NameBank = await userService.GetUserByIdAsync(store.OwnerId) != null ? (await userService.GetUserByIdAsync(store.OwnerId)).Name : "Saccombank",
-                QuantityFood = QuantityFood
+                QuantityFood = QuantityFood,
+                State = store.State,
             };
 
             return storeOwnerDto;
         }
-        return null;
+        return new StoreOwnerDto();
     }
 
     private class Img

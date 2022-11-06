@@ -24,5 +24,7 @@ namespace TakeFood.StoreService.ViewModel.Dtos.Store
         public string? NameBank { get; set; }
         [JsonPropertyName("QuantityOfFood")]
         public int QuantityFood { get; set; }
+        [JsonPropertyName("State")]
+        public string? State { get; set; }
     }
 }

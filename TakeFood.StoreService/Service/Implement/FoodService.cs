@@ -37,18 +37,27 @@ namespace StoreService.Service.Implement
                 Description = food.Descript,
                 State = food.State
             };
-            f.CategoriesID = new List<string>();
-            f.CategoriesID.Add(food.CategoriesID);
+            f.CategoriesID = new List<string>
+            {
+                food.CategoriesID
+            };
 
             Food temp = await _foodRepository.InsertAsync(f);
 
             foreach (var i in food.ListTopping)
             {
-                FoodTopping foodTopping = new FoodTopping()
+                FoodTopping foodTopping = new()
                 {
                     ToppingId = i.ID,
                     FoodId = temp.Id
                 };
+                ToppingCreateFoodDto toppingCreateFoodDto = new()
+                {
+                    ID = i.ID,
+                    Name = i.Name
+                };
+
+                food.ListTopping.Add(toppingCreateFoodDto);
                 await _foodToppingRepository.InsertAsync(foodTopping);
             }
         }
@@ -123,7 +132,6 @@ namespace StoreService.Service.Implement
             var listFood = await _foodRepository.FindAsync(x => x.StoreId == StoreID);
 
             List<FoodView> listFoodView = new();
-            List<string> ToppingName = new List<string>();
 
             foreach (Food food in listFood)
             {
@@ -153,7 +161,6 @@ namespace StoreService.Service.Implement
                         FoodTemp.ListTopping.Add(topping.Name);
                     }
                 }
-                FoodTemp.ListTopping = ToppingName;
                 listFoodView.Add(FoodTemp);
             }
 

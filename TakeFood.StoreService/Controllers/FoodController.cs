@@ -21,7 +21,7 @@ namespace StoreService.Controllers
         }
 
         [HttpPost("{StoreID}")]
-        [Authorize(roles: Roles.ShopeOwner)]
+        /*[Authorize(roles: Roles.ShopeOwner)]*/
         public async Task<IActionResult> CreateFood(string StoreID, CreateFoodDto food)
         {
             await _FoodService.CreateFood(StoreID, food);

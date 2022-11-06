@@ -26,7 +26,7 @@ namespace StoreService.Controllers
         {
             try
             {
-                if (await _StoreService.getStoreByOwnerID(OwnerID) == null)
+                if (await _StoreService.GetStoreByOwnerID(OwnerID) == null)
                 {
                     await _StoreService.CreateStore(OwnerID, store);
                     return Ok();
@@ -46,7 +46,7 @@ namespace StoreService.Controllers
         [Route("GetStoreByOwner")]
         public async Task<JsonResult> GetStoreByOwnerID(string ownerID)
         {
-            StoreOwnerDto store = await _StoreService.getStoreByOwnerID(ownerID);
+            StoreOwnerDto store = await _StoreService.GetStoreByOwnerID(ownerID);
             try
             {
                 var result = new JsonResult(store);

@@ -6,7 +6,5 @@ namespace TakeFood.StoreService.ViewModel.Dtos.Food
     {
         [JsonPropertyName("ID")]
         public string ID { get; set; }
-        [JsonPropertyName("Name")]
-        public string Name { get; set; }
     }
 }

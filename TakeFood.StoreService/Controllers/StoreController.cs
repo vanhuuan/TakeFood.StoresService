@@ -20,7 +20,7 @@ namespace StoreService.Controllers
         }
 
         [HttpPost]
-        [Authorize(roles: Roles.User)]
+        /*[Authorize(roles: Roles.User)]*/
         [Route("CreateStore")]
         public async Task<IActionResult> CreateStoreAsync(string OwnerID,[FromBody] CreateStoreDto store)
         {

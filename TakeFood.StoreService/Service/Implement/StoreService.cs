@@ -43,8 +43,8 @@ public class StoreService : IStoreService
         Address address = new()
         {
             Addrress = "Tỉnh/TP: " + store.StoreAddress.province + ", Quân/Huyện: " + store.StoreAddress.district + ", Xã/Phường: " + store.StoreAddress.town,
-            Lat = store.lat,
-            Lng = store.lng
+            Lat = store.StoreAddress.lat,
+            Lng = store.StoreAddress.lng
         };
         Store _store = new()
         {
@@ -368,7 +368,7 @@ public class StoreService : IStoreService
 
             return storeOwnerDto;
         }
-        return new StoreOwnerDto();
+        return null;
     }
 
     private class Img

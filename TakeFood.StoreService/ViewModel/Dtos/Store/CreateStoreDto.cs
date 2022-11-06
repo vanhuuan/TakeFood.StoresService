@@ -17,6 +17,12 @@ namespace TakeFood.StoreService.ViewModel.Dtos.Store
         [JsonPropertyName("address")]
         [NotNull]
         public StoreAddressDto StoreAddress { get; set; }
+        [JsonPropertyName("lat")]
+        [NotNull]
+        public double lat { get; set; }
+        [JsonPropertyName("lng")]
+        [NotNull]
+        public double lng { get; set; }
 
         [JsonPropertyName("urlStoreImage")]
         [NotNull]

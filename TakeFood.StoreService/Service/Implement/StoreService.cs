@@ -40,9 +40,11 @@ public class StoreService : IStoreService
 
     public async Task CreateStore(string ownerID, CreateStoreDto store)
     {
-        Address address = new Address()
+        Address address = new()
         {
-            Information = "Tỉnh/TP: " + store.StoreAddress.province + ", Quân/Huyện: " + store.StoreAddress.district + ", Xã/Phường: " + store.StoreAddress.town,
+            Addrress = "Tỉnh/TP: " + store.StoreAddress.province + ", Quân/Huyện: " + store.StoreAddress.district + ", Xã/Phường: " + store.StoreAddress.town,
+            Lat = store.lat,
+            Lng = store.lng
         };
         Store _store = new()
         {

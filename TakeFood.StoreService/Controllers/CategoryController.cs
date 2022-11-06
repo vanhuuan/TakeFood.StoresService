@@ -4,6 +4,7 @@ using StoreService.Service;
 using StoreService.ViewModel.Dtos.Category;
 using TakeFood.StoreService.Controllers;
 using TakeFood.StoreService.Model.Entities;
+using TakeFood.StoreService.Model.Entities.Category;
 
 namespace StoreService.Controllers
 {
@@ -20,7 +21,7 @@ namespace StoreService.Controllers
 
         [HttpPost]
         [Authorize(roles: Roles.ShopeOwner)]
-        public async Task<IActionResult> createCategory(CategoryDto category)
+        public async Task<IActionResult> createCategory(CreateCategoryDto category)
         {
             await _categoryService.CreateCategory(category);
 

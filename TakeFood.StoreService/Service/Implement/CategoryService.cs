@@ -1,6 +1,7 @@
 ﻿using StoreService.Model.Entities.Category;
 using StoreService.Model.Repository;
 using StoreService.ViewModel.Dtos.Category;
+using TakeFood.StoreService.Model.Entities.Category;
 
 namespace StoreService.Service.Implement
 {
@@ -13,7 +14,7 @@ namespace StoreService.Service.Implement
             this.cateRepository = cateRepository;
         }
 
-        public async Task CreateCategory(CategoryDto category)
+        public async Task CreateCategory(CreateCategoryDto category)
         {
             var categories = await cateRepository.FindAsync(x => x.Name == category.Name);
             if (categories.Count != 0) return;

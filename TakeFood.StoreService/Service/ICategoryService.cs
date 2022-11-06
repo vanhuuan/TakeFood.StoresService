@@ -1,4 +1,5 @@
 ﻿using StoreService.ViewModel.Dtos.Category;
+using TakeFood.StoreService.Model.Entities.Category;
 
 namespace StoreService.Service
 {
@@ -7,7 +8,7 @@ namespace StoreService.Service
         Task<List<CategoryDto>> GetAllCategories();
         Task<List<CategoryDto>> GetAllStoreCategories();
         Task<CategoryDto> GetCategoryById(String id);
-        Task CreateCategory(CategoryDto category);
+        Task CreateCategory(CreateCategoryDto category);
         Task UpdateCategory(string id, CategoryDto category);
         Task DeleteCategory(String id);
     }

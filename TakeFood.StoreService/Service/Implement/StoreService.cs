@@ -42,7 +42,7 @@ public class StoreService : IStoreService
     {
         Address address = new()
         {
-            Addrress ="Số nhà: " + store.StoreAddress.stress + ", Tỉnh/TP: " + store.StoreAddress.province + ", Quân/Huyện: " + store.StoreAddress.district + ", Xã/Phường: " + store.StoreAddress.town,
+            Addrress = store.StoreAddress.stress + ", " + store.StoreAddress.province + ", " + store.StoreAddress.district + ", " + store.StoreAddress.town,
             Lat = store.StoreAddress.lat,
             Lng = store.StoreAddress.lng
         };

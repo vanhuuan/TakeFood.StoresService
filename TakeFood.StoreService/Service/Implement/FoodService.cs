@@ -53,7 +53,7 @@ namespace StoreService.Service.Implement
                 };
                 ToppingCreateFoodDto toppingCreateFoodDto = new()
                 {
-                    ID = i.ID
+                    ID = i.ID,
                 };
 
                 food.ListTopping.Add(toppingCreateFoodDto);

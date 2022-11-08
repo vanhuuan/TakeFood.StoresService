@@ -165,6 +165,7 @@ public class Startup
         services.AddScoped<IAddressService, AddressService>();
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IToppingService, ToppingService>();
+        services.AddScoped<IWorkTime, WorkTimeService>();
 
         services.AddScoped<IJwtService, JwtService>(x => new JwtService(x.GetRequiredService<IMongoRepository<UserRefreshToken>>()
            , appSetting.JwtConfig.Secret, appSetting.JwtConfig.Secret2, appSetting.JwtConfig.ExpirationInHours, appSetting.JwtConfig.ExpirationInMonths));

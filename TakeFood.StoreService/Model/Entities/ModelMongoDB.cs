@@ -35,7 +35,7 @@ public class ModelMongoDB
     [JsonConverter(typeof(DateTimeConverter))]
     [Column("created_date")]
     [BsonElement("createdDate")]
-    public DateTime? CreatedDate { get; set; }
+    public DateTime CreatedDate { get; set; }
 
     /// <summary>
     /// Edit date time

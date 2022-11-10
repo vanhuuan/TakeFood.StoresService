@@ -118,7 +118,13 @@ namespace StoreService.Service.Implement
 
                 foreach (var topping in await _foodToppingRepository.FindAsync(x => x.FoodId == i.Id))
                 {
-                    FoodTemp.ListTopping.Add((await _toppingRepository.FindOneAsync(x => x.Id == topping.ToppingId)).Name);
+                    Topping topping1 = await _toppingRepository.FindOneAsync(x => x.Id == topping.ToppingId);
+                    ToppingFood toppingFood = new()
+                    {
+                        ID = topping1.Id,
+                        Name = topping1.Name
+                    };
+                    FoodTemp.ListTopping.Add(toppingFood);
                 }
                 ListFoodView.Add(FoodTemp);
             }
@@ -143,7 +149,6 @@ namespace StoreService.Service.Implement
                     State = food.State == true ? "Còn hàng" : "Hết hàng",
                     FoodId = food.Id
                 };
-                FoodTemp.ListTopping = new List<string>();
                 if (food.CategoriesID.Count > 0)
                 {
                     if(await _categoryRepository.FindOneAsync(x => x.Id == (food.CategoriesID)[0]) != null)
@@ -154,10 +159,15 @@ namespace StoreService.Service.Implement
                 foreach (var i in await _foodToppingRepository.FindAsync(x => x.FoodId == food.Id))
                 {
 
-                    var topping = await _toppingRepository.FindOneAsync(x => x.Id == i.ToppingId);
+                    Topping topping = await _toppingRepository.FindOneAsync(x => x.Id == i.ToppingId);
                     if (topping != null)
                     {
-                        FoodTemp.ListTopping.Add(topping.Name);
+                        ToppingFood toppingFood = new()
+                        {
+                            ID = topping.Id,
+                            Name = topping.Name,
+                        };
+                        FoodTemp.ListTopping.Add(toppingFood);
                     }
                 }
                 listFoodView.Add(FoodTemp);

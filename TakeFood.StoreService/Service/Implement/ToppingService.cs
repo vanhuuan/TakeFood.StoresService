@@ -40,12 +40,15 @@ namespace TakeFood.StoreService.Service.Implement
             };
         }
 
-        public async Task DeleteTopping(string ID)
+        public async Task<Boolean> DeleteTopping(string ID)
         {
             Topping topping = await _ToppingRepository.FindOneAsync(x => x.Id == ID);
+            if (topping == null) return false;
 
             topping.State = "DeActive";
             await _ToppingRepository.UpdateAsync(topping);
+
+            return true;
         }
 
         public async Task<List<ToppingViewDto>> GetAllToppingByStoreID(string StoreID, string state)

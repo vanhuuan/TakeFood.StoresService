@@ -28,6 +28,7 @@ namespace StoreService.Service.Implement
 
         public async Task CreateFood(string StoreID, CreateFoodDto food)
         {
+            if ((await _foodRepository.FindOneAsync(x => x.Name == food.Name)) != null) throw new Exception("Món ăn đã tồn tại");
             Food f = new()
             {
                 Name = food.Name,
@@ -61,12 +62,16 @@ namespace StoreService.Service.Implement
             }
         }
 
-        public async Task DeleteFood(string FoodID)
+        public async Task<Boolean> DeleteFood(string FoodID)
         {
             Food food = await _foodRepository.FindOneAsync(x => x.Id == FoodID);
 
+            if (food == null) return false;
+
             food.State = false;
             await _foodRepository.UpdateAsync(food);
+
+            return true;
         }
 
         public async Task<FoodViewMobile> GetFoodByID(string FoodID)
@@ -179,23 +184,30 @@ namespace StoreService.Service.Implement
         public async Task UpdateFood(string FoodID, CreateFoodDto foodUpdate)
         {
             Food food = await _foodRepository.FindOneAsync(x => x.Id == FoodID);
-            food.Name = foodUpdate.Name;
-            food.Price = foodUpdate.Price;
-            food.Description = foodUpdate.Descript;
-            food.ImgUrl = foodUpdate.urlImage;
-            food.CategoriesID[0] = foodUpdate.CategoriesID;
-            await _foodRepository.UpdateAsync(food);
-
-            await _foodToppingRepository.RemoveManyAsync(x => x.FoodId == FoodID);
-
-            foreach (var i in foodUpdate.ListTopping)
+            if (food != null)
             {
-                FoodTopping foodTopping = new FoodTopping()
+                food.Name = foodUpdate.Name;
+                food.Price = foodUpdate.Price;
+                food.Description = foodUpdate.Descript;
+                food.ImgUrl = foodUpdate.urlImage;
+                food.CategoriesID[0] = foodUpdate.CategoriesID;
+                await _foodRepository.UpdateAsync(food);
+
+                await _foodToppingRepository.RemoveManyAsync(x => x.FoodId == FoodID);
+
+                foreach (var i in foodUpdate.ListTopping)
                 {
-                    ToppingId = i.ID,
-                    FoodId = FoodID
-                };
-                await _foodToppingRepository.InsertAsync(foodTopping);
+                    FoodTopping foodTopping = new FoodTopping()
+                    {
+                        ToppingId = i.ID,
+                        FoodId = FoodID
+                    };
+                    await _foodToppingRepository.InsertAsync(foodTopping);
+                }
+            }
+            else
+            {
+                throw new Exception("Không tồn tại món ăn này");
             }
         }
     }

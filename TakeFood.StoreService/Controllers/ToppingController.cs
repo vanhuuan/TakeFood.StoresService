@@ -19,7 +19,7 @@ namespace TakeFood.StoreService.Controllers
         }
 
         [HttpPost("{StoreID}")]
-        [Authorize(roles: Roles.ShopeOwner)]
+        //[Authorize(roles: Roles.ShopeOwner)]
         public async Task<IActionResult> CreateTopping(string StoreID, CreateToppingDto createToppingDto)
         {
             await _toppingService.CreateTopping(StoreID, createToppingDto);
@@ -60,9 +60,9 @@ namespace TakeFood.StoreService.Controllers
         [Authorize(roles: Roles.ShopeOwner)]
         public async Task<IActionResult> Delete(String id)
         {
-            await _toppingService.DeleteTopping(id);
+            if (await _toppingService.DeleteTopping(id)) return Ok();
 
-            return Ok();
+            return BadRequest("không tồn tại topping này");
         }
     }
 }

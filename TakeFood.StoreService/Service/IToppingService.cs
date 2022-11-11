@@ -8,6 +8,6 @@ namespace TakeFood.StoreService.Service
         Task UpdateTopping(string ID, CreateToppingDto topping);
         Task<ToppingViewDto> GetToppingByID(string ID);
         Task<List<ToppingViewDto>> GetAllToppingByStoreID(string storeID, string state);
-        Task DeleteTopping(string ID);
+        Task<Boolean> DeleteTopping(string ID);
     }
 }

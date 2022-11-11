@@ -30,7 +30,7 @@ namespace StoreService.Controllers
         }
 
         [HttpPut]
-        [Authorize(roles: Roles.ShopeOwner)]
+        //[Authorize(roles: Roles.ShopeOwner)]
         public async Task<IActionResult> UpdateFood(string FoodID, CreateFoodDto foodUpdate)
         {
             await _FoodService.UpdateFood(FoodID, foodUpdate);
@@ -39,12 +39,12 @@ namespace StoreService.Controllers
         }
 
         [HttpDelete]
-        [Authorize(roles: Roles.ShopeOwner)]
+        //[Authorize(roles: Roles.ShopeOwner)]
         public async Task<IActionResult> DeleteFood(string id)
         {
-            await _FoodService.DeleteFood(id);
+            if (await _FoodService.DeleteFood(id)) return Ok();
 
-            return Ok();
+            return BadRequest("không tồn tại món này");
         }
 
         [HttpGet("GetAllFoodByStore")]

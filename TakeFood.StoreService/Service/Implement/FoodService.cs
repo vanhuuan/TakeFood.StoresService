@@ -62,13 +62,13 @@ namespace StoreService.Service.Implement
             }
         }
 
-        public async Task<Boolean> DeleteFood(string FoodID)
+        public async Task<Boolean> UpdateState(string FoodID, bool state)
         {
             Food food = await _foodRepository.FindOneAsync(x => x.Id == FoodID);
 
             if (food == null) return false;
 
-            food.State = false;
+            food.State = state;
             await _foodRepository.UpdateAsync(food);
 
             return true;

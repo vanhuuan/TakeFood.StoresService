@@ -36,9 +36,29 @@ namespace StoreService.Controllers
 
         [HttpGet]
         [Route("GetStoreCategory")]
-        public async Task<List<CategoryDto>> getAllStoreCategory()
+        public async Task<JsonResult> getAllStoreCategory()
         {
-            return await _categoryService.GetAllStoreCategories();
+            try
+            {
+                return new JsonResult(await _categoryService.GetAllStoreCategories());
+            }catch(Exception e)
+            {
+                return new JsonResult(e);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetFoodCategory")]
+        public async Task<JsonResult> getAllFoodCategory()
+        {
+            try
+            {
+                return new JsonResult(await _categoryService.GetAllFoodCategories());
+            }catch(Exception e)
+            {
+                return new JsonResult(e);
+            }
+            
         }
 
         [HttpGet("{id}")]

@@ -7,6 +7,7 @@ namespace StoreService.Service
     {
         Task<List<CategoryDto>> GetAllCategories();
         Task<List<CategoryDto>> GetAllStoreCategories();
+        Task<List<CategoryDto>> GetAllFoodCategories();
         Task<CategoryDto> GetCategoryById(String id);
         Task CreateCategory(CreateCategoryDto category);
         Task UpdateCategory(string id, CategoryDto category);

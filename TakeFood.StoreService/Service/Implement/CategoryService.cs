@@ -62,6 +62,20 @@ namespace StoreService.Service.Implement
             return categoryList;
         }
 
+        public async Task<List<CategoryDto>> GetAllFoodCategories()
+        {
+            var categories = await cateRepository.FindAsync(x => x.Type == "Category_Food");
+
+            List<CategoryDto> categoryList = new List<CategoryDto>();
+
+            foreach (var category in categories)
+            {
+                categoryList.Add(new CategoryDto() { Name = category.Name, CategoryId = category.Id, Type = category.Type });
+            }
+
+            return categoryList;
+        }
+
         public async Task<CategoryDto?> GetCategoryById(string id)
         {
             Category category = await cateRepository.FindByIdAsync(id);

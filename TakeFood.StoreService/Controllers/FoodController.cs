@@ -29,7 +29,7 @@ namespace StoreService.Controllers
             return Ok(food);
         }
 
-        [HttpPut]
+        [HttpPut("UpdateFood")]
         //[Authorize(roles: Roles.ShopeOwner)]
         public async Task<IActionResult> UpdateFood(string FoodID, CreateFoodDto foodUpdate)
         {
@@ -38,11 +38,11 @@ namespace StoreService.Controllers
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpPut("UpdateState")]
         //[Authorize(roles: Roles.ShopeOwner)]
-        public async Task<IActionResult> DeleteFood(string id)
+        public async Task<IActionResult> UpdateState(string id, bool state)
         {
-            if (await _FoodService.DeleteFood(id)) return Ok();
+            if (await _FoodService.UpdateState(id, state)) return Ok();
 
             return BadRequest("không tồn tại món này");
         }

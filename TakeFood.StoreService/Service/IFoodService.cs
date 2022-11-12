@@ -8,7 +8,7 @@ namespace StoreService.Service
     {
         Task CreateFood(string StoreID, CreateFoodDto food);
         Task UpdateFood(string FoodID, CreateFoodDto foodUpdate);
-        Task<Boolean> DeleteFood(string FoodID);
+        Task<Boolean> UpdateState(string FoodID, bool state);
         Task<List<FoodView>> GetAllFoodsByStoreID(string StoreID);
         Task<List<FoodView>> GetAllFoodsByCategory(string CategoryID);
         Task<FoodViewMobile> GetFoodByID(string FoodID);

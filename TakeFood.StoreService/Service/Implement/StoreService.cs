@@ -382,26 +382,17 @@ public class StoreService : IStoreService
         foreach (var store in rs.Data)
         {
             var owner = await userService.GetUserByIdAsync(store.OwnerId);
-            if (owner != null)
+            var address = await addressRepository.FindByIdAsync(store.AddressId);
+            var ad = address == null ? "Không xác định" : address.Addrress;
+            var ownerName = owner == null ? "Được thêm tự động!!" : owner.Name;
+            list.Add(new StoreCardDto()
             {
-                list.Add(new StoreCardDto()
-                {
-                    PhoneNumber = store.PhoneNumber,
-                    Name = store.Name,
-                    State = store.State,
-                    OwnerName = owner.Name
-                });
-            }
-            else
-            {
-                list.Add(new StoreCardDto()
-                {
-                    PhoneNumber = store.PhoneNumber,
-                    Name = store.Name,
-                    State = store.State,
-                    OwnerName = "Được thêm tự động!!"
-                });
-            }
+                PhoneNumber = store.PhoneNumber,
+                Name = store.Name,
+                State = store.State,
+                Address = ad,
+                OwnerName = ownerName
+            });
         }
         switch (dto.SortBy)
         {

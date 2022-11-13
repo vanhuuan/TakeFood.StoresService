@@ -1,5 +1,4 @@
-﻿using Amazon.S3.Model;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StoreService.Middleware;
 using StoreService.Service;
 using System.ComponentModel.DataAnnotations;
@@ -22,7 +21,7 @@ namespace StoreService.Controllers
         [HttpPost]
         /*[Authorize(roles: Roles.User)]*/
         [Route("CreateStore")]
-        public async Task<IActionResult> CreateStoreAsync(string OwnerID,[FromBody] CreateStoreDto store)
+        public async Task<IActionResult> CreateStoreAsync(string OwnerID, [FromBody] CreateStoreDto store)
         {
             try
             {
@@ -51,7 +50,8 @@ namespace StoreService.Controllers
             {
                 var result = new JsonResult(store);
                 return result;
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 return new JsonResult(e);
             }
@@ -117,6 +117,22 @@ namespace StoreService.Controllers
             {
                 var store = await _StoreService.GetStoreDetailAsync(storeId, lat, lng);
 
+                return Ok(store);
+            }
+            catch (Exception err)
+            {
+                return BadRequest(err.Message);
+            }
+        }
+
+        [HttpGet]
+        [Authorize(roles: Roles.Admin)]
+        [Route("GetPagingStore")]
+        public async Task<IActionResult> GetPagingStore(GetPagingStoreDto dto)
+        {
+            try
+            {
+                var store = await _StoreService.GetStorePaging(dto);
                 return Ok(store);
             }
             catch (Exception err)

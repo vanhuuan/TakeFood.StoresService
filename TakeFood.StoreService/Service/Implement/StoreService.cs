@@ -1,9 +1,8 @@
+using MongoDB.Driver;
 using StoreService.Model.Entities.Address;
-using StoreService.Model.Entities.Food;
 using StoreService.Model.Entities.Order;
 using StoreService.Model.Entities.Review;
 using StoreService.Model.Entities.Store;
-using StoreService.Model.Entities.User;
 using StoreService.Model.Repository;
 using System.Text.Json;
 using TakeFood.StoreService.Service;
@@ -369,6 +368,81 @@ public class StoreService : IStoreService
             return storeOwnerDto;
         }
         return null;
+    }
+
+    public async Task<StorePagingRespone> GetStorePaging(GetPagingStoreDto dto)
+    {
+        var filter = CreateFilter(dto.QueryString, dto.QueryType);
+        if (dto.PageNumber <= 0 || dto.PageSize <= 0)
+        {
+            throw new Exception("Pagenumber or pagesize can not be  zero or negative");
+        }
+        var rs = await storeRepository.GetPagingAsync(filter, dto.PageNumber - 1, dto.PageSize);
+        var list = new List<StoreCardDto>();
+        foreach (var store in rs.Data)
+        {
+            var owner = await userService.GetUserByIdAsync(store.OwnerId);
+            if (owner != null)
+            {
+                list.Add(new StoreCardDto()
+                {
+                    PhoneNumber = store.PhoneNumber,
+                    Name = store.Name,
+                    State = store.State,
+                    OwnerName = owner.Name
+                });
+            }
+            else
+            {
+                list.Add(new StoreCardDto()
+                {
+                    PhoneNumber = store.PhoneNumber,
+                    Name = store.Name,
+                    State = store.State,
+                    OwnerName = "Được thêm tự động!!"
+                });
+            }
+        }
+        switch (dto.SortBy)
+        {
+            case "Name": list = list.OrderBy(x => x.Name).ToList(); break;
+            case "OwnerName": list = list.OrderBy(x => x.OwnerName).ToList(); break;
+            case "PhoneNumber": list = list.OrderBy(x => x.PhoneNumber).ToList(); break;
+        }
+        switch (dto.SortType)
+        {
+            case "Desc": list.Reverse(); break;
+        }
+        int stt = 0;
+        foreach (var i in list)
+        {
+            stt++;
+            i.Id = stt;
+            i.Stt = stt;
+        }
+        var info = new StorePagingRespone()
+        {
+            Total = rs.Count,
+            PageIndex = dto.PageNumber,
+            PageSize = dto.PageSize,
+            Cards = list
+        };
+        return info;
+    }
+
+    private FilterDefinition<Store> CreateFilter(string query, string queryType)
+    {
+        var filter = Builders<Store>.Filter.Empty;
+        if (queryType != "All")
+        {
+            switch (queryType)
+            {
+                case "Code": filter &= Builders<Store>.Filter.Where(x => x.PhoneNumber.Contains(query)); break;
+                case "Name": filter &= Builders<Store>.Filter.Where(x => x.Name.Contains(query)); break;
+                default: filter &= Builders<Store>.Filter.StringIn(x => x.PhoneNumber, query); break;
+            }
+        }
+        return filter;
     }
 
     private class Img

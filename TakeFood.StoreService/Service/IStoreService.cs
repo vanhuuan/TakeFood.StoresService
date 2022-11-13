@@ -31,5 +31,6 @@ namespace StoreService.Service
         /// <returns></returns>
         Task<StoreDetailsDto> GetStoreDetailAsync(string storeId, double lat, double lng);
         Task<StoreOwnerDto> GetStoreByOwnerID(string ownerID);
+        Task<StorePagingRespone> GetStorePaging(GetPagingStoreDto getStorePagingDto);
     }
 }

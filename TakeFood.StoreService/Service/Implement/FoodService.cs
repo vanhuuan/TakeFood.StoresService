@@ -28,7 +28,7 @@ namespace StoreService.Service.Implement
 
         public async Task CreateFood(string StoreID, CreateFoodDto food)
         {
-            if ((await _foodRepository.FindOneAsync(x => x.Name == food.Name)) != null) throw new Exception("Món ăn đã tồn tại");
+            if ((await _foodRepository.FindOneAsync(x => x.Name == food.Name && x.StoreId == StoreID)) != null) throw new Exception("Món ăn đã tồn tại");
             Food f = new()
             {
                 Name = food.Name,

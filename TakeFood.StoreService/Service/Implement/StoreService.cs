@@ -60,6 +60,7 @@ public class StoreService : IStoreService
             CMND = store.cmnd,
         };
 
+        await storeRepository.InsertAsync(_store);
         foreach (var category in store.Categories)
         {
             StoreCategory storeCategory = new StoreCategory()
@@ -70,7 +71,7 @@ public class StoreService : IStoreService
             await storeCateRepository.InsertAsync(storeCategory);
         }
 
-        await storeRepository.InsertAsync(_store);
+        
         await InsertImage(_store.Id, "6354d739d64447e2509cb9fb", store.urlStoreImage);
         await InsertImage(_store.Id, "6354d7e9d64447e2509cb9fc", store.urlKitchenImage);
         await InsertImage(_store.Id, "6354d802d64447e2509cb9fd", store.urlMenuImage);

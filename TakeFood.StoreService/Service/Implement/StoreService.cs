@@ -395,7 +395,8 @@ public class StoreService : IStoreService
                 Name = store.Name,
                 State = store.State,
                 Address = ad,
-                OwnerName = ownerName
+                OwnerName = ownerName,
+                StoreId = store.Id,
             });
         }
         int stt = 0;

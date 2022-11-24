@@ -44,6 +44,11 @@ namespace TakeFood.StoreService.Service.Implement
             return (await ImageRepository.FindOneAsync(x => x.StoreId == storeId)).Url;
         }
 
+        public async Task<IList<Image>> GetAllStoreSlug(string storeId)
+        {
+            return (await ImageRepository.FindAsync(x => x.StoreId == storeId));
+        }
+
         public Task UpdateImage(string id, ImageDto image)
         {
             throw new NotImplementedException();

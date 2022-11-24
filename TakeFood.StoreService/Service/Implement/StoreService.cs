@@ -7,6 +7,7 @@ using StoreService.Model.Repository;
 using System.Text.Json;
 using TakeFood.StoreService.Service;
 using TakeFood.StoreService.Utilities.Helper;
+using TakeFood.StoreService.ViewModel.Dtos.Address;
 using TakeFood.StoreService.ViewModel.Dtos.Food;
 using TakeFood.StoreService.ViewModel.Dtos.Image;
 using TakeFood.StoreService.ViewModel.Dtos.Store;
@@ -23,9 +24,10 @@ public class StoreService : IStoreService
     private readonly IMongoRepository<StoreCategory> storeCateRepository;
     private readonly IMongoRepository<Review> reviewRepository;
     private readonly IMongoRepository<Order> orderRepository;
+    private readonly ICategoryService categoryService;
     public StoreService(IMongoRepository<Store> storeRepository, IMongoRepository<Address> addressRepository
         , IImageService imageService, IMongoRepository<StoreCategory> storeCateRepository, IFoodService foodService
-        , IMongoRepository<Review> reviewRepository, IMongoRepository<Order> orderRepository, IUserService userService)
+        , IMongoRepository<Review> reviewRepository, IMongoRepository<Order> orderRepository, IUserService userService, ICategoryService categoryService)
     {
         this.storeRepository = storeRepository;
         this.addressRepository = addressRepository;
@@ -35,6 +37,7 @@ public class StoreService : IStoreService
         this.reviewRepository = reviewRepository;
         this.orderRepository = orderRepository;
         this.userService = userService;
+        this.categoryService = categoryService;
     }
 
     public async Task CreateStore(string ownerID, CreateStoreDto store)
@@ -373,11 +376,12 @@ public class StoreService : IStoreService
     public async Task<StorePagingRespone> GetStorePaging(GetPagingStoreDto dto)
     {
         var filter = CreateFilter(dto.QueryString, dto.QueryType);
+        var sort = CreateSortFilter(dto.SortType, dto.SortBy);
         if (dto.PageNumber <= 0 || dto.PageSize <= 0)
         {
             throw new Exception("Pagenumber or pagesize can not be  zero or negative");
         }
-        var rs = await storeRepository.GetPagingAsync(filter, dto.PageNumber - 1, dto.PageSize);
+        var rs = await storeRepository.GetPagingAsync(filter, dto.PageNumber - 1, dto.PageSize, sort, includeIsDeleted: true);
         var list = new List<StoreCardDto>();
         foreach (var store in rs.Data)
         {
@@ -393,16 +397,6 @@ public class StoreService : IStoreService
                 Address = ad,
                 OwnerName = ownerName
             });
-        }
-        switch (dto.SortBy)
-        {
-            case "Name": list = list.OrderBy(x => x.Name).ToList(); break;
-            case "OwnerName": list = list.OrderBy(x => x.OwnerName).ToList(); break;
-            case "PhoneNumber": list = list.OrderBy(x => x.PhoneNumber).ToList(); break;
-        }
-        switch (dto.SortType)
-        {
-            case "Desc": list.Reverse(); break;
         }
         int stt = 0;
         foreach (var i in list)
@@ -434,6 +428,108 @@ public class StoreService : IStoreService
             }
         }
         return filter;
+    }
+
+    private SortDefinition<Store> CreateSortFilter(string sortType, string sortBy)
+    {
+        var filter = Builders<Store>.Sort.Descending(x => x.Id);
+        if (sortType == "Desc")
+        {
+            switch (sortBy)
+            {
+                case "Name": filter = Builders<Store>.Sort.Descending(x => x.Name); break;
+                case "OwnerName": filter = Builders<Store>.Sort.Descending(x => x.OwnerId); break;
+                case "PhoneNumber": filter = Builders<Store>.Sort.Descending(x => x.PhoneNumber); break;
+            }
+        }
+        else
+        {
+            switch (sortBy)
+            {
+                case "Name": filter = Builders<Store>.Sort.Ascending(x => x.Name); break;
+                case "OwnerName": filter = Builders<Store>.Sort.Ascending(x => x.OwnerId); break;
+                case "PhoneNumber": filter = Builders<Store>.Sort.Ascending(x => x.PhoneNumber); break;
+            }
+
+        }
+        return filter;
+    }
+
+    public async Task<StoreRegisterDetailDto> GetStoreRegisterDetailAsync(string storeId)
+    {
+        var store = await storeRepository.FindByIdAsync(storeId);
+        if (store == null)
+        {
+            throw new Exception("Store's not exist");
+        }
+        var owner = await userService.GetUserByIdAsync(store.OwnerId);
+        if (owner == null)
+        {
+            throw new Exception("Owner of store's not exist");
+        }
+        var address = await addressRepository.FindByIdAsync(store.AddressId);
+        var addressComponent = address.Addrress.Split(",");
+        var storeImg = await imageService.GetAllStoreSlug(storeId);
+        var storeCat = await storeCateRepository.FindAsync(x => x.StoreId == storeId);
+        var listCat = new List<String>();
+        foreach (var id in storeCat)
+        {
+            var cat = await categoryService.GetCategoryById(id.CategoryId);
+            if (cat != null)
+            {
+                listCat.Add(cat.Name);
+            }
+        }
+        var detail = new StoreRegisterDetailDto()
+        {
+            nameOwner = owner.Name,
+            nameSTKOwner = store.STK,
+            StoreName = store.Name,
+            StorePhone = store.PhoneNumber,
+            StoreAddress = new StoreAddressDto()
+            {
+                lat = address.Lat,
+                lng = address.Lng,
+                district = addressComponent[2],
+                province = addressComponent[1],
+                stress = addressComponent[0],
+                town = addressComponent[3]
+            },
+            TaxID = store.TaxId,
+            BankBranch = "Không xác định",
+            NameBank = "Không xác định",
+            cmnd = store.CMND == null ? "Chưa có" : store.CMND,
+            urlBackCmndImage = storeImg.FirstOrDefault(x => x.CategoryId == "6354d818d64447e2509cb9ff")!.Url,
+            urlFontCmndImage = storeImg.FirstOrDefault(x => x.CategoryId == "6354d80dd64447e2509cb9fe")!.Url,
+            urlKitchenImage = storeImg.FirstOrDefault(x => x.CategoryId == "6354d7e9d64447e2509cb9fc")!.Url,
+            urlLicenseImage = storeImg.FirstOrDefault(x => x.CategoryId == "6354d82cd64447e2509cba00")!.Url,
+            urlMenuImage = storeImg.FirstOrDefault(x => x.CategoryId == "6354d802d64447e2509cb9fd")!.Url,
+            urlStoreImage = storeImg.FirstOrDefault(x => x.CategoryId == "6354d739d64447e2509cb9fb")!.Url,
+            Categories = listCat,
+            State = store.State
+        };
+        return detail;
+    }
+
+    public async Task ActiveStoreAsync(string storeId)
+    {
+        var store = await storeRepository.FindByIdAsync(storeId);
+        if (store == null)
+        {
+            throw new Exception("Store's not exist");
+        }
+        store.State = "Active";
+        await storeRepository.UpdateAsync(store);
+    }
+    public async Task DeActiveStoreAsync(string storeId)
+    {
+        var store = await storeRepository.FindByIdAsync(storeId);
+        if (store == null)
+        {
+            throw new Exception("Store's not exist");
+        }
+        store.State = "DeActive";
+        await storeRepository.UpdateAsync(store);
     }
 
     private class Img

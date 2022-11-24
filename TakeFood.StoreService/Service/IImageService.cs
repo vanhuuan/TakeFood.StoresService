@@ -1,4 +1,5 @@
 ﻿
+using StoreService.Model.Entities.Image;
 using TakeFood.StoreService.ViewModel.Dtos.Image;
 
 namespace TakeFood.StoreService.Service
@@ -11,5 +12,6 @@ namespace TakeFood.StoreService.Service
         Task UpdateImage(string id, ImageDto image);
         Task DeleteImage(String id);
         Task<String> GetStoreSlug(string storeId);
+        Task<IList<Image>> GetAllStoreSlug(string storeId);
     }
 }

@@ -143,6 +143,54 @@ namespace StoreService.Controllers
 
         [HttpGet]
         [Authorize(roles: Roles.Admin)]
+        [Route("GetRegisterDetailStore")]
+        public async Task<IActionResult> GetStoreRegisterDetail([Required] string storeId)
+        {
+            try
+            {
+                var store = await _StoreService.GetStoreRegisterDetailAsync(storeId);
+                return Ok(store);
+            }
+            catch (Exception err)
+            {
+                return BadRequest(err.Message);
+            }
+        }
+
+        [HttpPut]
+        [Authorize(roles: Roles.Admin)]
+        [Route("ActiveStore")]
+        public async Task<IActionResult> ActiveStore([Required] string storeId)
+        {
+            try
+            {
+                await _StoreService.ActiveStoreAsync(storeId);
+                return Ok();
+            }
+            catch (Exception err)
+            {
+                return BadRequest(err.Message);
+            }
+        }
+
+        [HttpPut]
+        [Authorize(roles: Roles.Admin)]
+        [Route("DeActiveStore")]
+        public async Task<IActionResult> DeActiveStore([Required] string storeId)
+        {
+            try
+            {
+                await _StoreService.DeActiveStoreAsync(storeId);
+                return Ok();
+            }
+            catch (Exception err)
+            {
+                return BadRequest(err.Message);
+            }
+        }
+
+        [HttpGet]
+        [Authorize(roles: Roles.Admin)]
         [Route("InsertStore")]
         public async Task<IActionResult> InsertStoreAsync()
         {

@@ -484,7 +484,8 @@ public class StoreService : IStoreService
         var detail = new StoreRegisterDetailDto()
         {
             nameOwner = owner.Name,
-            nameSTKOwner = store.STK,
+            nameSTKOwner = owner.Name.ToUpper().Normalize(),
+            STK = store.STK,
             StoreName = store.Name,
             StorePhone = store.PhoneNumber,
             StoreAddress = new StoreAddressDto()

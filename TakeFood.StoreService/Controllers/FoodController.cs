@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StoreService.Service;
-using TakeFood.StoreService.Controllers;
-using StoreService.Model.Entities.Food;
-using TakeFood.StoreService.ViewModel.Dtos.Food;
-using TakeFood.StoreService.Model.Entities;
-using StoreService.Middleware;
 using System.ComponentModel.DataAnnotations;
+using TakeFood.StoreService.Controllers;
+using TakeFood.StoreService.ViewModel.Dtos.Food;
 
 namespace StoreService.Controllers
 {
@@ -21,7 +18,6 @@ namespace StoreService.Controllers
         }
 
         [HttpPost("{StoreID}")]
-        /*[Authorize(roles: Roles.ShopeOwner)]*/
         public async Task<IActionResult> CreateFood(string StoreID, CreateFoodDto food)
         {
             await _FoodService.CreateFood(StoreID, food);
@@ -30,7 +26,6 @@ namespace StoreService.Controllers
         }
 
         [HttpPut("UpdateFood")]
-        //[Authorize(roles: Roles.ShopeOwner)]
         public async Task<IActionResult> UpdateFood(string FoodID, CreateFoodDto foodUpdate)
         {
             await _FoodService.UpdateFood(FoodID, foodUpdate);
@@ -39,7 +34,6 @@ namespace StoreService.Controllers
         }
 
         [HttpPut("UpdateState")]
-        //[Authorize(roles: Roles.ShopeOwner)]
         public async Task<IActionResult> UpdateState(string id, bool state)
         {
             if (await _FoodService.UpdateState(id, state)) return Ok();
@@ -48,36 +42,35 @@ namespace StoreService.Controllers
         }
 
         [HttpGet("GetAllFoodByStore")]
-        [Authorize]
-        public async Task<IActionResult> getAllFoodByStore([Required]string StoreID)
+        public async Task<IActionResult> getAllFoodByStore([Required] string StoreID)
         {
             try
             {
                 var foodList = await _FoodService.GetAllFoodsByStoreID(StoreID);
                 return Ok(foodList);
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
         }
 
         [HttpGet("GetAllFoodByCategory/{CategoryID}")]
-        [Authorize]
         public async Task<List<FoodView>> GetAllFoodByCategory(string CategoryID)
         {
             return await _FoodService.GetAllFoodsByCategory(CategoryID);
         }
 
         [HttpGet("GetFoodViewMobile")]
-        [Authorize]
-        public async Task<JsonResult> GetFoodViewMobile([Required]string FoodID)
+        public async Task<JsonResult> GetFoodViewMobile([Required] string FoodID)
         {
             try
             {
                 FoodViewMobile fMoble = await _FoodService.GetFoodByID(FoodID);
                 var food = new JsonResult(fMoble);
                 return food;
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 JsonResult error = new(e.Message);
                 return error;

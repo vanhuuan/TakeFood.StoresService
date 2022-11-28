@@ -19,7 +19,6 @@ namespace StoreService.Controllers
         }
 
         [HttpPost]
-        /*[Authorize(roles: Roles.User)]*/
         [Route("CreateStore")]
         public async Task<IActionResult> CreateStoreAsync(string OwnerID, [FromBody] CreateStoreDto store)
         {
@@ -59,7 +58,6 @@ namespace StoreService.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         [Route("GetNearBy")]
         public async Task<ActionResult<List<CardStoreDto>>> GetStoreNearByAsync([FromBody] GetStoreNearByDto dto)
         {
@@ -76,7 +74,6 @@ namespace StoreService.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         [Route("FilterNearByWithCategory")]
         public async Task<IActionResult> FilterStoreNearByAsync([FromBody] FilterStoreByCategoryId dto)
         {
@@ -92,7 +89,6 @@ namespace StoreService.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         [Route("FindStore")]
         public async Task<IActionResult> FindStoreAsync([Required] string name, [Required] double lat, [Required] double lng, [Required] int start)
         {
@@ -109,7 +105,6 @@ namespace StoreService.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         [Route("GetStore")]
         public async Task<IActionResult> GetStoreById([Required] string storeId, [Required] double lat, [Required] double lng)
         {
@@ -126,7 +121,6 @@ namespace StoreService.Controllers
         }
 
         [HttpGet]
-        [Authorize(roles: Roles.Admin)]
         [Route("GetPagingStore")]
         public async Task<IActionResult> GetPagingStore(GetPagingStoreDto dto)
         {
@@ -142,7 +136,6 @@ namespace StoreService.Controllers
         }
 
         [HttpGet]
-        [Authorize(roles: Roles.Admin)]
         [Route("GetRegisterDetailStore")]
         public async Task<IActionResult> GetStoreRegisterDetail([Required] string storeId)
         {
@@ -158,7 +151,6 @@ namespace StoreService.Controllers
         }
 
         [HttpPut]
-        [Authorize(roles: Roles.Admin)]
         [Route("ActiveStore")]
         public async Task<IActionResult> ActiveStore([Required] string storeId)
         {
@@ -174,7 +166,6 @@ namespace StoreService.Controllers
         }
 
         [HttpPut]
-        [Authorize(roles: Roles.Admin)]
         [Route("DeActiveStore")]
         public async Task<IActionResult> DeActiveStore([Required] string storeId)
         {

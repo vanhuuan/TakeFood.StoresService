@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StoreService.Middleware;
 using StoreService.Service;
 using StoreService.ViewModel.Dtos.Category;
 using TakeFood.StoreService.Controllers;
-using TakeFood.StoreService.Model.Entities;
 using TakeFood.StoreService.Model.Entities.Category;
 
 namespace StoreService.Controllers
@@ -20,7 +18,6 @@ namespace StoreService.Controllers
         }
 
         [HttpPost]
-        [Authorize(roles: Roles.ShopeOwner)]
         public async Task<IActionResult> createCategory(CreateCategoryDto category)
         {
             await _categoryService.CreateCategory(category);
@@ -41,7 +38,8 @@ namespace StoreService.Controllers
             try
             {
                 return new JsonResult(await _categoryService.GetAllStoreCategories());
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 return new JsonResult(e);
             }
@@ -54,11 +52,12 @@ namespace StoreService.Controllers
             try
             {
                 return new JsonResult(await _categoryService.GetAllFoodCategories());
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 return new JsonResult(e);
             }
-            
+
         }
 
         [HttpGet("{id}")]
@@ -68,7 +67,6 @@ namespace StoreService.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(roles: Roles.ShopeOwner)]
         public async Task<IActionResult> Update(string id, CategoryDto category)
         {
             var _category = await _categoryService.GetCategoryById(id);
@@ -80,7 +78,6 @@ namespace StoreService.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(roles: Roles.ShopeOwner)]
         public async Task<IActionResult> Delete(string id)
         {
             var category = await _categoryService.GetCategoryById(id);

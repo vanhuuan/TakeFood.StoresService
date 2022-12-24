@@ -74,7 +74,7 @@ public class StoreService : IStoreService
             await storeCateRepository.InsertAsync(storeCategory);
         }
 
-        
+
         await InsertImage(_store.Id, "6354d739d64447e2509cb9fb", store.urlStoreImage);
         await InsertImage(_store.Id, "6354d7e9d64447e2509cb9fc", store.urlKitchenImage);
         await InsertImage(_store.Id, "6354d802d64447e2509cb9fd", store.urlMenuImage);
@@ -442,6 +442,7 @@ public class StoreService : IStoreService
                 case "Name": filter = Builders<Store>.Sort.Descending(x => x.Name); break;
                 case "OwnerName": filter = Builders<Store>.Sort.Descending(x => x.OwnerId); break;
                 case "PhoneNumber": filter = Builders<Store>.Sort.Descending(x => x.PhoneNumber); break;
+                case "CreateDate": filter = Builders<Store>.Sort.Descending(x => x.CreatedDate); break;
             }
         }
         else
@@ -451,6 +452,7 @@ public class StoreService : IStoreService
                 case "Name": filter = Builders<Store>.Sort.Ascending(x => x.Name); break;
                 case "OwnerName": filter = Builders<Store>.Sort.Ascending(x => x.OwnerId); break;
                 case "PhoneNumber": filter = Builders<Store>.Sort.Ascending(x => x.PhoneNumber); break;
+                case "CreateDate": filter = Builders<Store>.Sort.Ascending(x => x.CreatedDate); break;
             }
 
         }

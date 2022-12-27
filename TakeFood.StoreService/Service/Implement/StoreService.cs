@@ -61,6 +61,7 @@ public class StoreService : IStoreService
             STK = store.STK,
             email = await userService.GetUserByIdAsync(ownerID) != null ? (await userService.GetUserByIdAsync(ownerID)).Email : "pnquang2405@gmail.com",
             CMND = store.cmnd,
+            NameBank = store.NameBank,
         };
 
         await storeRepository.InsertAsync(_store);
@@ -364,7 +365,7 @@ public class StoreService : IStoreService
                 Address = address != null ? address.Addrress : "Đang cập nhật địa chỉ",
                 Email = store.email != null ? store.email : "pnquang2405@gmail.com",
                 CMND = store.CMND != null ? store.CMND : "191202392",
-                NameBank = await userService.GetUserByIdAsync(store.OwnerId) != null ? (await userService.GetUserByIdAsync(store.OwnerId)).Name : "Saccombank",
+                NameBank = await userService.GetUserByIdAsync(store.OwnerId) != null ? (await storeRepository.FindByIdAsync(store.Id)).NameBank : "Saccombank",
                 QuantityFood = QuantityFood,
                 State = store.State,
             };

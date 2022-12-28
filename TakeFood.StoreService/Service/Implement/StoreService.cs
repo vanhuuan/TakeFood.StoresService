@@ -145,18 +145,23 @@ public class StoreService : IStoreService
             foreach (var i in items)
             {
                 var store = await storeRepository.FindOneAsync(x => x.OwnerId == i.id.ToString());
-
-                await foodService.CreateFood(store.Id, new CreateFoodDto()
+                try
                 {
-                    Name = i.name,
-                    Descript = i.description,
-                    urlImage = i.photo,
-                    State = true,
-                    Price = i.price,
-                    CategoriesID = "",
-                    ListTopping = new List<ToppingCreateFoodDto>()
-                }); ;
-
+                    await foodService.CreateFood(store.Id, new CreateFoodDto()
+                    {
+                        Name = i.name,
+                        Descript = i.description,
+                        urlImage = i.photo,
+                        State = true,
+                        Price = i.price,
+                        CategoriesID = "",
+                        ListTopping = new List<ToppingCreateFoodDto>()
+                    });
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
             }
             return;
         }
@@ -333,9 +338,9 @@ public class StoreService : IStoreService
             Address = address.Addrress,
             PhoneNumber = store.PhoneNumber,
             Star = store.SumStar / (store.NumReiview == 0 ? 1 : store.NumReiview),
-            Distance = new Coordinates(48.672309, 15.695585)
+            Distance = new Coordinates(lat, lng)
                             .DistanceTo(
-                                new Coordinates(48.237867, 16.389477),
+                                new Coordinates(address.Lat, address.Lng),
                                 UnitOfLength.Kilometers
                             ),
             NumOfOrder = numOfOrder,

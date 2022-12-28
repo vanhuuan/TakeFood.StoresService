@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StoreService.Middleware;
 using StoreService.Service;
 using System.ComponentModel.DataAnnotations;
 using TakeFood.StoreService.Controllers;
-using TakeFood.StoreService.Model.Entities;
 using TakeFood.StoreService.ViewModel.Dtos.Store;
 
 
@@ -181,7 +179,7 @@ namespace StoreService.Controllers
         }
 
         [HttpGet]
-        [Authorize(roles: Roles.Admin)]
+        // [Authorize(roles: Roles.Admin)]
         [Route("InsertStore")]
         public async Task<IActionResult> InsertStoreAsync()
         {
@@ -191,7 +189,7 @@ namespace StoreService.Controllers
         }
 
         [HttpGet]
-        [Authorize(roles: Roles.Admin)]
+        // [Authorize(roles: Roles.Admin)]
         [Route("InsertMenu")]
         public async Task<IActionResult> InsertMenuStoreAsync()
         {
